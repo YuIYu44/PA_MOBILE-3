@@ -1,4 +1,4 @@
 # pa_mobile
 
-##3THRIFT
+## 3THRIFT
 Thrifstore
