@@ -31,7 +31,7 @@ class CustomTheme extends ChangeNotifier {
       useMaterial3: true,
       scaffoldBackgroundColor: Color(0xffF1F6F9),
       iconTheme: IconThemeData(color: Color(0xff212A3E)),
-      cardColor: Color(0xff9BA4B5),
+      cardColor: Color(0xEE9BA4B5),
       textTheme: TextTheme(
         bodyLarge: TextStyle(color: Colors.black87),
       ),

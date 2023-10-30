@@ -18,14 +18,17 @@ class _signup extends State<signup> {
           return Future.value(false);
         },
         child: Scaffold(
-            body: Stack(children: [
+            body: SingleChildScrollView(
+                child: Stack(children: [
           Container(
               color: Theme.of(context).cardColor,
+              height: MediaQuery.of(context).size.height * 0.8,
+              width: MediaQuery.of(context).size.width * 0.8,
               margin: EdgeInsets.fromLTRB(
                   MediaQuery.of(context).size.width * 0.1,
-                  MediaQuery.of(context).size.height * 0.05,
-                  MediaQuery.of(context).size.width * 0.1,
-                  MediaQuery.of(context).size.height * 0.05),
+                  MediaQuery.of(context).size.height * 0.115,
+                  0,
+                  0),
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -70,6 +73,6 @@ class _signup extends State<signup> {
                   ],
                 ),
               )),
-        ])));
+        ]))));
   }
 }
