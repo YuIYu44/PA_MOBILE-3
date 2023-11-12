@@ -1,9 +1,12 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
-import 'package:pa_mobile/screen/admin/home_admin.dart';
 import 'package:pa_mobile/screen/login.dart';
 import 'widget.dart';
 
 class welcome extends StatelessWidget {
+  const welcome({super.key});
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
