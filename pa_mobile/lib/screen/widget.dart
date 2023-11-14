@@ -99,6 +99,41 @@ Widget button(
               ))));
 }
 
+Widget textform(BuildContext context, TextEditingController controllers,
+    String text, double fontsize, double top, double width) {
+  return Container(
+    width: MediaQuery.sizeOf(context).width * width,
+    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * top),
+    child: TextField(
+      controller: controllers,
+      maxLines: 7,
+      decoration: InputDecoration(
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+              color: Theme.of(context).textTheme.bodyLarge!.color!, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+              color: Theme.of(context).textTheme.bodyLarge!.color!, width: 1),
+        ),
+        contentPadding: EdgeInsets.only(top: 30, left: 10),
+        labelText: text,
+        labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              fontSize: fontsize + 3,
+              fontFamily: 'Iceland',
+              fontWeight: FontWeight.bold,
+            ),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+      ),
+      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            fontSize: fontsize,
+            fontFamily: 'Iceland',
+            fontWeight: FontWeight.normal,
+          ),
+    ),
+  );
+}
+
 Widget textfields(BuildContext context, TextEditingController controllers,
     bool obscure, String text, double fontsize, double top, double width) {
   return Container(

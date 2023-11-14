@@ -2,6 +2,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pa_mobile/screen/admin/crud/add.dart';
+import 'package:pa_mobile/screen/admin/crud/edit.dart';
 import 'package:pa_mobile/screen/widget.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +25,7 @@ List<String> category_atasan = [
 ];
 List<List<String>> member = [
   ["place.png", "time.png", "diskon.png", "3THRIFT.png"],
-  ["Ibnu Yafi", "Hadie Pratama", "Agustina Dwi", "Ayu Lestari"]
+  ["100.000", "142.500", "200.000", "550.000"]
 ];
 
 class homeadminstate extends State<home_admin> {
@@ -78,8 +80,12 @@ class homeadminstate extends State<home_admin> {
                               width: MediaQuery.of(context).size.width * 0.35,
                               child: Column(
                                 children: [
-                                  texts_2(context, "Rp ${member[1][index]}", 16,
-                                      TextAlign.start, FontWeight.bold), //harga
+                                  texts_2(
+                                      context,
+                                      "Rp. ${member[1][index]}",
+                                      16,
+                                      TextAlign.start,
+                                      FontWeight.bold), //harga
                                   texts_2(context, "keterangan", 13,
                                       TextAlign.start, FontWeight.normal)
                                 ],
@@ -89,16 +95,20 @@ class homeadminstate extends State<home_admin> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 IconButton(
-                                    onPressed:
-                                        () {}, //delete favorite => database
+                                    onPressed: () {}, //delete data => database
                                     icon: const Icon(
                                       CupertinoIcons.trash,
                                       size: 35,
                                     )),
                                 IconButton(
-                                    onPressed:
-                                        () {}, //edit favorite => database
-                                    icon: const Icon(CupertinoIcons.pen, size: 35)),
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const editScreen()));
+                                    }, //edit data => database
+                                    icon: const Icon(CupertinoIcons.pen,
+                                        size: 35)),
                               ],
                             )
                           ],
@@ -115,20 +125,10 @@ class homeadminstate extends State<home_admin> {
     );
   }
 
-  Widget add(BuildContext context) {
-    return const Padding(padding: EdgeInsets.all(12));
-  }
-
-  Widget edit(BuildContext context) {
-    return const Padding(padding: EdgeInsets.all(12));
-  }
-
   @override
   Widget build(BuildContext context) {
     final List<Widget> pages = [
       home(context),
-      add(context),
-      edit(context),
     ];
     return WillPopScope(
       onWillPop: () {
@@ -145,21 +145,61 @@ class homeadminstate extends State<home_admin> {
           currentIndex: _index,
           items: [
             BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.home,
-                    color: Theme.of(context).iconTheme.color, size: 35),
-                label: "Home"),
+              icon: Icon(
+                CupertinoIcons.home,
+                color: Theme.of(context).iconTheme.color,
+                size: 35,
+              ),
+              label: "Home",
+            ),
             BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.arrow_left_square,
-                    color: Theme.of(context).iconTheme.color, size: 35),
-                label: "Logout"),
+              icon: Icon(
+                CupertinoIcons.arrow_left_square,
+                color: Theme.of(context).iconTheme.color,
+                size: 35,
+              ),
+              label: "Logout",
+            ),
           ],
+          onTap: (index) {
+            if (index == 1) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Konfirmasi Logout"),
+                    content: const Text("Apakah Anda yakin ingin logout?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Batal"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Logout"),
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else {
+              // Home tab pressed
+              setState(() {
+                _index = index;
+              });
+            }
+          },
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).cardColor,
           onPressed: () {
-            setState(() {
-              _index = 1;
-            });
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const addScreen()));
           },
           child: Icon(
             CupertinoIcons.add_circled,
