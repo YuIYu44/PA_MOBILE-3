@@ -1,57 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pa_mobile/screen/user/chosen_clothes.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-class CustomTheme extends ChangeNotifier {
-  ThemeData? currentTheme;
-  SharedPreferences? prefs;
-  bool? dark;
-  CustomTheme(int edit) {
-    preferenced(edit);
-  }
-  preferenced(int edit) async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? dark = prefs.getBool('darkmode');
-    if (dark == null && edit == 0) {
-      await prefs.setBool('darkmode', true);
-    } else if (edit == 1 && dark != null) {
-      dark = !dark;
-      await prefs.setBool('darkmode', dark);
-    }
-    if (dark == true) {
-      setDarkmode();
-    } else {
-      setLightMode();
-    }
-  }
-
-  setLightMode() {
-    currentTheme = ThemeData(
-      useMaterial3: true,
-      scaffoldBackgroundColor: Color(0xffF1F6F9),
-      iconTheme: IconThemeData(color: Color(0xff212A3E)),
-      cardColor: Color(0xEE9BA4B5),
-      textTheme: TextTheme(
-        bodyLarge: TextStyle(color: Colors.black87),
-      ),
-    );
-    notifyListeners();
-  }
-
-  setDarkmode() {
-    currentTheme = ThemeData(
-      useMaterial3: true,
-      scaffoldBackgroundColor: Color(0xff212A3E),
-      cardColor: Color(0xff394867),
-      iconTheme: IconThemeData(color: Color(0xffF1F6F9)),
-      textTheme: TextTheme(
-        bodyLarge: TextStyle(color: Colors.white70),
-      ),
-    );
-    notifyListeners();
-  }
-}
 
 Widget texts(context, texts, fontsizes, textsalign) {
   return Text(

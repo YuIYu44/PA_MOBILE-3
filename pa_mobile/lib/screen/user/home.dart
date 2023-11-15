@@ -1,37 +1,34 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pa_mobile/main.dart';
+import 'package:pa_mobile/provider/change_page.dart';
+import 'package:pa_mobile/provider/change_theme.dart';
+import 'package:pa_mobile/services/user_service.dart';
+import 'package:pa_mobile/utils/shared_preference.dart';
 import 'changepass.dart';
 import 'package:pa_mobile/screen/widget.dart';
 import 'package:provider/provider.dart';
 
-class home extends StatefulWidget {
-  const home({super.key});
-
-  @override
-  State<home> createState() => homeState();
-}
-
-var category_atasan = {
-  'OUTER': ["Cardigan", "Jaket"],
-  'WARM': ["Sweater", "Hoodie"],
-  'INNER': ["Kemeja", "Kaos"],
-};
-var category_bawahan = {
-  'CELANA': ["Jeans", "Short"],
-};
-List<List<String>> member = [
-  [
-    "assets/place.png",
-    "assets/time.png",
-    "assets/diskon.png",
-    "assets/3THRIFT.png"
-  ],
-  ["Ibnu Yafi", "Hadie Pratama", "Agustina Dwi", "Ayu Lestari"]
-];
-
-class homeState extends State<home> {
-  int _index = 0;
+class home extends StatelessWidget {
+  final category_atasan = {
+    'OUTER': ["Cardigan", "Jaket"],
+    'WARM': ["Sweater", "Hoodie"],
+    'INNER': ["Kemeja", "Kaos"],
+  };
+  final category_bawahan = {
+    'CELANA': ["Jeans", "Short"],
+  };
+  final List<List<String>> member = [
+    [
+      "assets/place.png",
+      "assets/time.png",
+      "assets/diskon.png",
+      "assets/3THRIFT.png"
+    ],
+    ["Ibnu Yafi", "Hadie Pratama", "Agustina Dwi", "Ayu Lestari"]
+  ];
 
   Widget _homepage(BuildContext context) {
     return SingleChildScrollView(
@@ -45,11 +42,8 @@ class homeState extends State<home> {
                 child: IconButton(
                     icon: Icon(CupertinoIcons.moon, size: 30),
                     onPressed: () {
-                      final themeProvider =
-                          Provider.of<CustomTheme>(context, listen: false);
-                      setState(() {
-                        themeProvider.preferenced(1);
-                      });
+                      Provider.of<CustomTheme>(context, listen: false)
+                          .preferenced(1);
                     }),
               ),
               SizedBox(
@@ -156,24 +150,45 @@ class homeState extends State<home> {
   Widget profile(BuildContext context) {
     return Center(
         child: Container(
-      margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.1),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          texts_2(context, "Username", 18, TextAlign.center, FontWeight.normal),
-          texts_2(context, "email@gmail.com", 15, TextAlign.center,
-              FontWeight.normal),
-          button(context, "Change Password", 0.08, 0, 0.7, () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => changepass()));
-          }),
-          button(context, "Log Out", 0.02, 0, 0.7, () async {
-            //await deletepref(); //delete preference
-            Navigator.pop(context);
-          })
-        ],
-      ),
-    ));
+            margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).size.height * 0.1),
+            child: FutureBuilder(
+                future: userservice().uservalue(),
+                builder: (BuildContext context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              height:
+                                  MediaQuery.sizeOf(context).height * 0.125),
+                          texts_2(context, snapshot.data["username"], 20,
+                              TextAlign.center, FontWeight.normal),
+                          texts_2(context, snapshot.data.id, 15,
+                              TextAlign.center, FontWeight.normal),
+                          button(context, "Change Password", 0.08, 0, 0.7, () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    changepass(snapshot.data.id)));
+                          }),
+                          button(context, "Log Out", 0.02, 0, 0.7, () async {
+                            FirebaseAuth.instance.signOut();
+                            await preference().delete();
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => MyApp()),
+                                (Route<dynamic> route) => false);
+                          })
+                        ],
+                      );
+                    }
+                  }
+                  return Container(
+                    color: ThemeData().scaffoldBackgroundColor,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                })));
   }
 
   @override
@@ -184,41 +199,38 @@ class homeState extends State<home> {
       info(context),
       profile(context)
     ];
-    return WillPopScope(
-        onWillPop: () {
+    return ChangeNotifierProvider<changepage>(
+        create: (context) => changepage(),
+        child: WillPopScope(onWillPop: () {
           return Future.value(false);
-        },
-        child: Scaffold(
-          appBar: appbar(context),
-          body: pages[_index],
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            unselectedItemColor: Theme.of(context).iconTheme.color,
-            selectedItemColor: Theme.of(context).cardColor,
-            currentIndex: _index,
-            onTap: (index) {
-              if (index != _index) {
-                setState(() {
-                  _index = index;
-                });
-              }
-            },
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            items: [
-              BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.home, size: 35), label: "Home"),
-              BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.heart_fill, size: 35),
-                  label: "favorite"),
-              BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.info, size: 35), label: "Info"),
-              BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.profile_circled, size: 35),
-                  label: "Profile"),
-            ],
-          ),
-        ));
+        }, child: Consumer<changepage>(builder: (context, changePage, child) {
+          return Scaffold(
+              appBar: appbar(context),
+              body: pages[changePage.selects],
+              bottomNavigationBar: BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                unselectedItemColor: Theme.of(context).iconTheme.color,
+                selectedItemColor: Theme.of(context).cardColor,
+                currentIndex: changePage.selects,
+                onTap: (_index) {
+                  changePage.change(_index);
+                },
+                showSelectedLabels: false,
+                showUnselectedLabels: false,
+                items: [
+                  BottomNavigationBarItem(
+                      icon: Icon(CupertinoIcons.home, size: 35), label: "Home"),
+                  BottomNavigationBarItem(
+                      icon: Icon(CupertinoIcons.heart, size: 35),
+                      label: "favorite"),
+                  BottomNavigationBarItem(
+                      icon: Icon(CupertinoIcons.info, size: 35), label: "Info"),
+                  BottomNavigationBarItem(
+                      icon: Icon(CupertinoIcons.profile_circled, size: 35),
+                      label: "Profile"),
+                ],
+              ));
+        })));
   }
 }

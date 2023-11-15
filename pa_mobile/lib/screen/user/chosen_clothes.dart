@@ -2,31 +2,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pa_mobile/screen/widget.dart';
 
-String kind = "";
+class chosen_clothes extends StatelessWidget {
+  final String kind;
+  chosen_clothes(this.kind, {super.key});
 
-class chosen_clothes extends StatefulWidget {
-  final String kinds;
-  chosen_clothes(this.kinds, {super.key});
+  final List<List<String>> member = [
+    [
+      "assets/place.png",
+      "assets/time.png",
+      "assets/diskon.png",
+      "assets/3THRIFT.png"
+    ],
+    ["Ibnu Yafi", "Hadie Pratama", "Agustina Dwi", "Ayu Lestari"]
+  ];
 
-  @override
-  State<chosen_clothes> createState() => chosen_clothesstate(kinds);
-}
-
-List<List<String>> member = [
-  [
-    "assets/place.png",
-    "assets/time.png",
-    "assets/diskon.png",
-    "assets/3THRIFT.png"
-  ],
-  ["Ibnu Yafi", "Hadie Pratama", "Agustina Dwi", "Ayu Lestari"]
-];
-
-class chosen_clothesstate extends State<chosen_clothes> {
-  chosen_clothesstate(String kinds) {
-    kind = kinds;
-  }
-  bool _isTap = false;
+  bool _isTap =
+      false; //heart change after futurebuild database of user favorite
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -50,11 +41,11 @@ class chosen_clothesstate extends State<chosen_clothes> {
                       top: MediaQuery.sizeOf(context).height * 0.07,
                       child: Container(
                           width: MediaQuery.sizeOf(context).width * 0.94,
-                          height: 45,
+                          height: 50,
                           color: Theme.of(context).cardColor,
                           padding: EdgeInsets.only(left: 20, top: 10),
-                          child: texts_2(context, kind, 20, TextAlign.left,
-                              FontWeight.normal))),
+                          child: texts_2(context, kind, 25, TextAlign.left,
+                              FontWeight.bold))),
                   Positioned(
                       top: MediaQuery.sizeOf(context).height * 0.16,
                       child: SizedBox(

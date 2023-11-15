@@ -1,35 +1,36 @@
-// ignore_for_file: unused_import
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pa_mobile/main.dart';
 import 'package:pa_mobile/screen/admin/crud/add.dart';
 import 'package:pa_mobile/screen/admin/crud/edit.dart';
+import 'package:pa_mobile/provider/change_page.dart';
+import 'package:pa_mobile/provider/change_theme.dart';
 import 'package:pa_mobile/screen/widget.dart';
+import 'package:pa_mobile/utils/shared_preference.dart';
 import 'package:provider/provider.dart';
 
-class home_admin extends StatefulWidget {
-  const home_admin({super.key});
+class home_admin extends StatelessWidget {
+  home_admin({super.key});
 
-  @override
-  State<home_admin> createState() => homeadminstate();
-}
-
-List<String> category_atasan = [
-  "Cardigan",
-  "Jaket",
-  "Sweater",
-  "Hoodie",
-  "Kemeja",
-  "Kaos",
-  "Celana"
-];
-List<List<String>> member = [
-  ["place.png", "time.png", "diskon.png", "3THRIFT.png"],
-  ["100.000", "142.500", "200.000", "550.000"]
-];
-
-class homeadminstate extends State<home_admin> {
-  int _index = 0;
+  final List<String> category_atasan = [
+    "Cardigan",
+    "Jaket",
+    "Sweater",
+    "Hoodie",
+    "Kemeja",
+    "Kaos",
+    "Celana"
+  ];
+  final List<List<String>> member = [
+    [
+      "assets/place.png",
+      "assets/time.png",
+      "assets/diskon.png",
+      "assets/3THRIFT.png"
+    ],
+    ["100.000", "142.500", "200.000", "550.000"]
+  ];
 
   Widget home(BuildContext context) {
     return Padding(
@@ -43,11 +44,7 @@ class homeadminstate extends State<home_admin> {
             child: IconButton(
               icon: const Icon(CupertinoIcons.moon, size: 30),
               onPressed: () {
-                final themeProvider =
-                    Provider.of<CustomTheme>(context, listen: false);
-                setState(() {
-                  themeProvider.preferenced(1);
-                });
+                Provider.of<CustomTheme>(context, listen: false).preferenced(1);
               },
             ),
           ),
@@ -95,7 +92,7 @@ class homeadminstate extends State<home_admin> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 IconButton(
-                                    onPressed: () {}, //delete data => database
+                                    onPressed: () {},
                                     icon: const Icon(
                                       CupertinoIcons.trash,
                                       size: 35,
@@ -106,7 +103,7 @@ class homeadminstate extends State<home_admin> {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   const editScreen()));
-                                    }, //edit data => database
+                                    },
                                     icon: const Icon(CupertinoIcons.pen,
                                         size: 35)),
                               ],
@@ -130,85 +127,90 @@ class homeadminstate extends State<home_admin> {
     final List<Widget> pages = [
       home(context),
     ];
-    return WillPopScope(
-      onWillPop: () {
-        return Future.value(false);
-      },
-      child: Scaffold(
-        appBar: appbar(context),
-        body: pages[_index],
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          unselectedItemColor: Theme.of(context).cardColor,
-          selectedItemColor: Theme.of(context).iconTheme.color,
-          currentIndex: _index,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(
-                CupertinoIcons.home,
-                color: Theme.of(context).iconTheme.color,
-                size: 35,
-              ),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                CupertinoIcons.arrow_left_square,
-                color: Theme.of(context).iconTheme.color,
-                size: 35,
-              ),
-              label: "Logout",
-            ),
-          ],
-          onTap: (index) {
-            if (index == 1) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text("Konfirmasi Logout"),
-                    content: const Text("Apakah Anda yakin ingin logout?"),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text("Batal"),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                        child: const Text("Logout"),
-                      ),
-                    ],
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider<changepage>(create: (context) => changepage())
+        ],
+        child: WillPopScope(onWillPop: () {
+          return Future.value(false);
+        }, child: Consumer<changepage>(builder: (context, changePage, child) {
+          return Scaffold(
+            appBar: appbar(context),
+            body: pages[changePage.selects],
+            bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              unselectedItemColor: Theme.of(context).cardColor,
+              selectedItemColor: Theme.of(context).iconTheme.color,
+              currentIndex: changePage.selects,
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    CupertinoIcons.home,
+                    color: Theme.of(context).iconTheme.color,
+                    size: 35,
+                  ),
+                  label: "Home",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    CupertinoIcons.arrow_left_square,
+                    color: Theme.of(context).iconTheme.color,
+                    size: 35,
+                  ),
+                  label: "Logout",
+                ),
+              ],
+              onTap: (index) {
+                if (index == 1) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text("Konfirmasi Logout"),
+                        content: const Text("Apakah Anda yakin ingin logout?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Batal"),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              FirebaseAuth.instance.signOut();
+                              await preference().delete();
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => MyApp()),
+                                  (Route<dynamic> route) => false);
+                            },
+                            child: const Text("Logout"),
+                          ),
+                        ],
+                      );
+                    },
                   );
-                },
-              );
-            } else {
-              // Home tab pressed
-              setState(() {
-                _index = index;
-              });
-            }
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).cardColor,
-          onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const addScreen()));
-          },
-          child: Icon(
-            CupertinoIcons.add_circled,
-            color: Theme.of(context).iconTheme.color,
-            size: 50,
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      ),
-    );
+                } else {
+                  changePage.change(index);
+                }
+              },
+            ),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Theme.of(context).cardColor,
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const addScreen()));
+              },
+              child: Icon(
+                CupertinoIcons.add_circled,
+                color: Theme.of(context).iconTheme.color,
+                size: 50,
+              ),
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+          );
+        })));
   }
 }
