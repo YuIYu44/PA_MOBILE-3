@@ -139,7 +139,7 @@ class _addScreenState extends State<addScreen> {
             });
           },
         ),
-        Text(item["name"]!),
+        texts(context, item["name"], 14, TextAlign.start)
       ],
     );
   }
