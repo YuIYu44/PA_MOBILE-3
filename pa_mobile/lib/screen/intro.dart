@@ -20,9 +20,10 @@ class IntroductionPage extends StatelessWidget {
           bodyWidget: Column(
             children: [
               Text(
-                  "Temukan barang-barang berkualitas dengan harga terjangkau di toko thrift kami.",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                  textAlign: TextAlign.center),
+                "Temukan barang-barang berkualitas dengan harga terjangkau di toko thrift kami.",
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
           image: Container(
@@ -44,9 +45,10 @@ class IntroductionPage extends StatelessWidget {
           bodyWidget: Column(
             children: [
               Text(
-                  "Jelajahi koleksi kami dan temukan barang thrift yang sesuai dengan selera Anda.",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                  textAlign: TextAlign.center),
+                "Jelajahi koleksi kami dan temukan barang thrift yang sesuai dengan selera Anda.",
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
           image: Container(
@@ -68,9 +70,10 @@ class IntroductionPage extends StatelessWidget {
           bodyWidget: Column(
             children: [
               Text(
-                  "Dengan belanja di toko 3Thrift, Anda dapat mendapatkan barang berkualitas tanpa harus menguras dompet.",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                  textAlign: TextAlign.center),
+                "Dengan belanja di toko 3Thrift, Anda dapat mendapatkan barang berkualitas tanpa harus menguras dompet.",
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
           image: Container(
@@ -89,6 +92,16 @@ class IntroductionPage extends StatelessWidget {
       next: const Text("Selanjutnya"),
       done: const Text("Selesai"),
       onDone: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return const welcome();
+            },
+          ),
+        );
+      },
+      onSkip: () {
         Navigator.of(context).pop();
         Navigator.of(context).push(
           MaterialPageRoute(

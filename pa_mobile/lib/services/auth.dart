@@ -19,7 +19,7 @@ class Auth {
               .set({'username': name.toString(), 'status': 'user'});
           return "";
         }
-        return "Password must contain at least 6 characters";
+        return "Usernama & Password must contain at least 6 characters";
       }
       return "Fill all of the fields";
     } catch (e) {
