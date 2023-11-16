@@ -1,13 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pa_mobile/main.dart';
 import 'package:pa_mobile/screen/admin/crud/add.dart';
 import 'package:pa_mobile/screen/admin/crud/edit.dart';
 import 'package:pa_mobile/provider/change_page.dart';
 import 'package:pa_mobile/provider/change_theme.dart';
 import 'package:pa_mobile/screen/widget.dart';
-import 'package:pa_mobile/utils/shared_preference.dart';
 import 'package:provider/provider.dart';
 
 class home_admin extends StatelessWidget {
@@ -179,11 +177,6 @@ class home_admin extends StatelessWidget {
                           TextButton(
                             onPressed: () async {
                               FirebaseAuth.instance.signOut();
-                              await preference().delete();
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                      builder: (context) => MyApp()),
-                                  (Route<dynamic> route) => false);
                             },
                             child: const Text("Logout"),
                           ),

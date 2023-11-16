@@ -64,7 +64,9 @@ class _changepass extends State<changepass> {
                                     oldController.value.text,
                                     newController.value.text);
                                 await error_.change(error_notif);
-                                Navigator.pop(context);
+                                if (error_notif == "") {
+                                  Navigator.pop(context);
+                                }
                               }),
                             ]);
                           }),

@@ -2,11 +2,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pa_mobile/main.dart';
 import 'package:pa_mobile/provider/change_page.dart';
 import 'package:pa_mobile/provider/change_theme.dart';
+import 'package:pa_mobile/services/storage.dart';
 import 'package:pa_mobile/services/user_service.dart';
-import 'package:pa_mobile/utils/shared_preference.dart';
 import 'changepass.dart';
 import 'package:pa_mobile/screen/widget.dart';
 import 'package:provider/provider.dart';
@@ -46,30 +45,58 @@ class home extends StatelessWidget {
                           .preferenced(1);
                     }),
               ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.2,
-                child: CarouselSlider(
-                  items: [
-                    carousel(10.0, 8.0, "assets/place.png"),
-                    carousel(10.0, 8.0, "assets/time.png"),
-                    carousel(10.0, 8.0, "assets/diskon.png"),
-                  ],
-                  options: CarouselOptions(
-                    enlargeCenterPage: true,
-                    autoPlay: true,
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    enableInfiniteScroll: true,
-                    autoPlayAnimationDuration: Duration(milliseconds: 1000),
-                    viewportFraction: 0.8,
-                  ),
-                ),
-              ),
+              FutureBuilder(
+                  future: Storage().get_link("carousel"),
+                  builder: (BuildContext context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasData &&
+                          snapshot.data.toString().isNotEmpty) {
+                        return SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          child: CarouselSlider.builder(
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (BuildContext context, int itemIndex,
+                                    int pageViewIndex) =>
+                                Container(
+                              margin: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                image: DecorationImage(
+                                  image:
+                                      NetworkImage(snapshot.data![itemIndex]),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            options: CarouselOptions(
+                              enlargeCenterPage: true,
+                              autoPlay: true,
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              enableInfiniteScroll: true,
+                              autoPlayAnimationDuration:
+                                  Duration(milliseconds: 1000),
+                              viewportFraction: 0.8,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Container(
+                          color: ThemeData().scaffoldBackgroundColor,
+                        );
+                      }
+                    }
+                    return SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        child: Center(child: CircularProgressIndicator()));
+                  }),
               Container(
-                  margin: EdgeInsets.only(top: 80),
+                  margin: EdgeInsets.only(
+                      top: MediaQuery.sizeOf(context).height * 0.05),
                   width: MediaQuery.of(context).size.width * 0.93,
                   child: category(context, category_atasan)),
-              category(context, category_bawahan)
+              category(context, category_bawahan),
             ])));
   }
 
@@ -174,11 +201,6 @@ class home extends StatelessWidget {
                           }),
                           button(context, "Log Out", 0.02, 0, 0.7, () async {
                             FirebaseAuth.instance.signOut();
-                            await preference().delete();
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => MyApp()),
-                                (Route<dynamic> route) => false);
                           })
                         ],
                       );

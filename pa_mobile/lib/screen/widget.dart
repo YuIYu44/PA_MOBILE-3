@@ -160,19 +160,6 @@ PreferredSizeWidget appbar(context) {
   );
 }
 
-Widget carousel(circulars, edge, images) {
-  return Container(
-    margin: EdgeInsets.all(edge),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(circulars),
-      image: DecorationImage(
-        image: AssetImage(images),
-        fit: BoxFit.cover,
-      ),
-    ),
-  );
-}
-
 Widget category(context, Category) {
   return GridView.count(
       childAspectRatio: MediaQuery.of(context).size.width /
@@ -186,7 +173,8 @@ Widget category(context, Category) {
             texts_2(context, Category.keys.elementAt(index), 15, TextAlign.left,
                 FontWeight.bold),
             Container(
-                height: MediaQuery.of(context).size.height * 0.13,
+                // height: MediaQuery.of(context).size.height * 0.12,
+
                 width: MediaQuery.of(context).size.width * 0.9,
                 margin: EdgeInsets.only(
                     left: MediaQuery.of(context).size.width * 0.05),
@@ -200,10 +188,7 @@ Widget category(context, Category) {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              margin: EdgeInsets.only(
-                                  right: 10,
-                                  bottom: MediaQuery.of(context).size.height *
-                                      0.02),
+                              margin: EdgeInsets.only(right: 10, bottom: 10),
                               width: MediaQuery.of(context).size.width * 0.08,
                               height: MediaQuery.of(context).size.width * 0.08,
                               child: Image.asset(

@@ -12,10 +12,4 @@ class preference {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(key) == null ? null : prefs.getString(key);
   }
-
-  delete() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove("email");
-    await prefs.remove("password");
-  }
 }

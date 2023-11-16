@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pa_mobile/utils/shared_preference.dart';
 
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   static final CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
+  Future getcurrent() async {
+    final User? user = await _auth.currentUser;
+    return user;
+  }
+
   Future<String> signUp(String email, String password, String name) async {
     try {
       if (email != "") {
@@ -19,7 +23,7 @@ class Auth {
               .set({'username': name.toString(), 'status': 'user'});
           return "";
         }
-        return "Usernama & Password must contain at least 6 characters";
+        return "Username & Password must contain at least 6 characters";
       }
       return "Fill all of the fields";
     } catch (e) {
@@ -38,8 +42,6 @@ class Auth {
             email: email,
             password: password,
           );
-          preference().set('email', email);
-          preference().set('password', password);
           return "";
         }
         return "Password must contain at least 6 characters";
@@ -64,7 +66,7 @@ class Auth {
       if (newpass.length > 5 && newpass != currentpass) {
         try {
           await user!.updatePassword(newpass);
-          await preference().set('password', newpass);
+          return "";
         } catch (e) {
           return e.toString().toUpperCase().split("]")[1];
         }

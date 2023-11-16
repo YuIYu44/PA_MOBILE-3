@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pa_mobile/utils/shared_preference.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pa_mobile/services/auth.dart';
 
 class userservice {
   static final CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
   Future uservalue() async {
-    String? email = await preference().get("email");
+    User userFuture = await Auth().getcurrent();
+    String? email = userFuture.email;
     if (email == null) {
       return null;
     }
