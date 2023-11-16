@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pa_mobile/screen/widget.dart';
-import 'welcome.dart';
+import 'package:pa_mobile/intro.dart';
+import 'package:pa_mobile/provider/change_theme.dart';
 import 'package:provider/provider.dart';
 
 //disini bakal ada pengecekan preference apakah pernah login atau tidak =>database
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: Provider.of<CustomTheme>(context).currentTheme,
-      home: welcome(),
+      home: IntroductionPage(),
     );
   }
 }
