@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pa_mobile/firebase_options.dart';
 import 'package:pa_mobile/screen/admin/home_admin.dart';
+import 'package:pa_mobile/screen/intro.dart';
 import 'package:pa_mobile/screen/user/home.dart';
 import 'package:pa_mobile/provider/change_theme.dart';
-import 'package:pa_mobile/screen/welcome.dart';
 import 'package:pa_mobile/services/user_service.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
                     return home();
                   }
                 } else {
-                  return welcome(); //ganti jadi intro
+                  return IntroductionPage();
                 }
               }
               return Scaffold(

@@ -13,15 +13,15 @@ import 'package:provider/provider.dart';
 class home_admin extends StatelessWidget {
   home_admin({super.key});
 
-  final List<String> category_atasan = [
-    "Cardigan",
-    "Jaket",
-    "Sweater",
-    "Hoodie",
-    "Kemeja",
-    "Kaos",
-    "Celana"
-  ];
+  // final List<String> category_atasan = [
+  //   "Cardigan",
+  //   "Jaket",
+  //   "Sweater",
+  //   "Hoodie",
+  //   "Kemeja",
+  //   "Kaos",
+  //   "Celana"
+  // ];
   final List<List<String>> member = [
     [
       "assets/place.png",
