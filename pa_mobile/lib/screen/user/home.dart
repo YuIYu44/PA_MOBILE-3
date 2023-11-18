@@ -19,14 +19,11 @@ class home extends StatelessWidget {
   final category_bawahan = {
     'CELANA': ["Jeans", "Short"],
   };
-  final List<List<String>> member = [
-    [
-      "assets/place.png",
-      "assets/time.png",
-      "assets/diskon.png",
-      "assets/3THRIFT.png"
-    ],
-    ["Ibnu Yafi", "Hadie Pratama", "Agustina Dwi", "Ayu Lestari"]
+  final List<String> member = [
+    "assets/place.png",
+    "assets/time.png",
+    "assets/diskon.png",
+    "assets/3THRIFT.png"
   ];
 
   Widget _homepage(BuildContext context) {
@@ -50,12 +47,12 @@ class home extends StatelessWidget {
                   builder: (BuildContext context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.hasData &&
-                          snapshot.data.toString().isNotEmpty) {
+                          snapshot.data![0].toString().isNotEmpty) {
                         return SizedBox(
                           width: MediaQuery.of(context).size.width * 0.9,
                           height: MediaQuery.of(context).size.height * 0.2,
                           child: CarouselSlider.builder(
-                            itemCount: snapshot.data!.length,
+                            itemCount: snapshot.data![0].length,
                             itemBuilder: (BuildContext context, int itemIndex,
                                     int pageViewIndex) =>
                                 Container(
@@ -63,8 +60,8 @@ class home extends StatelessWidget {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.0),
                                 image: DecorationImage(
-                                  image:
-                                      NetworkImage(snapshot.data![itemIndex]),
+                                  image: NetworkImage(
+                                      snapshot.data![0][itemIndex]),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -105,7 +102,7 @@ class home extends StatelessWidget {
       padding: customEdgeInsets(context, 0.03, 0.02),
       child: ListView.builder(
           scrollDirection: Axis.vertical,
-          itemCount: member[0].length,
+          itemCount: member.length,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
                 padding: EdgeInsets.only(bottom: 20),
@@ -114,7 +111,7 @@ class home extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * 0.35,
                     height: MediaQuery.of(context).size.width * 0.35,
                     child: Image.asset(
-                      member[0][index],
+                      member[index],
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -146,32 +143,48 @@ class home extends StatelessWidget {
 
   Widget info(BuildContext context) {
     return Padding(
-      padding: customEdgeInsets(context, 0.03, 0.02),
-      child: ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: member[0].length,
-          itemBuilder: (BuildContext context, int index) {
-            return Row(children: [
-              Container(
-                margin: EdgeInsets.only(
-                    right: 20,
-                    bottom: MediaQuery.of(context).size.height * 0.05),
-                width: MediaQuery.of(context).size.width * 0.35,
-                height: MediaQuery.of(context).size.width * 0.35,
-                child: ClipOval(
-                  child: Image.asset(
-                    member[0][index],
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              SizedBox(
-                  height: MediaQuery.of(context).size.width * 0.2,
-                  child: texts_2(context, member[1][index], 20, TextAlign.start,
-                      FontWeight.bold))
-            ]);
-          }),
-    );
+        padding: customEdgeInsets(context, 0.03, 0.02),
+        child: FutureBuilder(
+            future: Storage().get_link("info"),
+            builder: (BuildContext context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData && snapshot.data.toString().isNotEmpty) {
+                  return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: snapshot.data![0].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Row(children: [
+                          Container(
+                            margin: EdgeInsets.only(
+                                right: 20,
+                                bottom:
+                                    MediaQuery.of(context).size.height * 0.05),
+                            width: MediaQuery.of(context).size.width * 0.35,
+                            height: MediaQuery.of(context).size.width * 0.35,
+                            child: ClipOval(
+                              child: Image.network(
+                                snapshot.data![0][index],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.width * 0.2,
+                              child: texts_2(context, snapshot.data![1][index],
+                                  20, TextAlign.start, FontWeight.bold))
+                        ]);
+                      });
+                } else {
+                  return Container(
+                    color: ThemeData().scaffoldBackgroundColor,
+                  );
+                }
+              }
+              return SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  child: Center(child: CircularProgressIndicator()));
+            }));
   }
 
   Widget profile(BuildContext context) {

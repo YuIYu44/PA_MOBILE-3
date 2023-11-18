@@ -35,7 +35,7 @@ class IntroductionPage extends StatelessWidget {
                     image: Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage(snapshot.data![0]),
+                          image: NetworkImage(snapshot.data![0][0]),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -59,7 +59,7 @@ class IntroductionPage extends StatelessWidget {
                     image: Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage(snapshot.data![1]),
+                          image: NetworkImage(snapshot.data![0][1]),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -83,7 +83,7 @@ class IntroductionPage extends StatelessWidget {
                     image: Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage(snapshot.data![2]),
+                          image: NetworkImage(snapshot.data![0][2]),
                           fit: BoxFit.cover,
                         ),
                       ),
