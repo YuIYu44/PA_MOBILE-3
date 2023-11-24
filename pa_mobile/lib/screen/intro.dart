@@ -95,6 +95,16 @@ class IntroductionPage extends StatelessWidget {
                 skip: const Text("Lewati"),
                 next: const Text("Selanjutnya"),
                 done: const Text("Selesai"),
+                onSkip: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const welcome();
+                      },
+                    ),
+                  );
+                },
                 onDone: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(
