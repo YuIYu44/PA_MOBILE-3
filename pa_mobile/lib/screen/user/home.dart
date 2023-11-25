@@ -234,11 +234,11 @@ class home extends StatelessWidget {
       info(context),
       profile(context)
     ];
-    return ChangeNotifierProvider<changepage>(
-        create: (context) => changepage(),
+    return ChangeNotifierProvider<ChangePage>(
+        create: (context) => ChangePage(),
         child: WillPopScope(onWillPop: () {
           return Future.value(false);
-        }, child: Consumer<changepage>(builder: (context, changePage, child) {
+        }, child: Consumer<ChangePage>(builder: (context, changePage, child) {
           return Scaffold(
               appBar: appbar(context),
               body: pages[changePage.selects],

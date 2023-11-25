@@ -1,17 +1,24 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pa_mobile/screen/widget.dart';
 
-class addScreen extends StatefulWidget {
-  const addScreen({super.key});
+class AddScreen extends StatefulWidget {
+  const AddScreen({super.key});
 
   @override
-  State<addScreen> createState() => _addScreenState();
+  State<AddScreen> createState() => _AddScreenState();
 }
 
-class _addScreenState extends State<addScreen> {
+class _AddScreenState extends State<AddScreen> {
   final TextEditingController hargaController = TextEditingController();
   final TextEditingController descController = TextEditingController();
+  XFile? _img;
+  final _picker = ImagePicker();
 
   String selectedCategory = "";
 
@@ -26,6 +33,9 @@ class _addScreenState extends State<addScreen> {
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference product =
+        FirebaseFirestore.instance.collection("product");
+
     return WillPopScope(
       onWillPop: () {
         return Future.value(false);
@@ -46,7 +56,7 @@ class _addScreenState extends State<addScreen> {
                   ),
                   alignment: Alignment.topLeft,
                   child: IconButton(
-                    icon: Icon(CupertinoIcons.back, size: 35),
+                    icon: const Icon(CupertinoIcons.back, size: 35),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -55,13 +65,28 @@ class _addScreenState extends State<addScreen> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      margin: EdgeInsets.only(
-                        right: MediaQuery.sizeOf(context).width * 0.04,
+                    GestureDetector(
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          right: MediaQuery.sizeOf(context).width * 0.04,
+                        ),
+                        width: MediaQuery.of(context).size.width * 0.47,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            image: (_img != null)
+                                ? DecorationImage(
+                                    image: FileImage(File(_img!.path)))
+                                : null),
                       ),
-                      color: Theme.of(context).cardColor,
-                      width: MediaQuery.of(context).size.width * 0.47,
-                      height: MediaQuery.of(context).size.height * 0.3,
+                      onTap: () async {
+                        final image = await _picker.pickImage(
+                            source: ImageSource.gallery);
+
+                        setState(() {
+                          _img = image;
+                        });
+                      },
                     ),
                     Expanded(
                       child: Column(
@@ -93,11 +118,6 @@ class _addScreenState extends State<addScreen> {
                     ),
                   ],
                 ),
-                Container(
-                  margin: EdgeInsets.only(
-                      right: MediaQuery.sizeOf(context).width * 0.5),
-                  child: button(context, "Add", 0.03, 0.2, 0.25, () {}),
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -119,6 +139,26 @@ class _addScreenState extends State<addScreen> {
                     buildRadioTile(items[5]),
                   ],
                 ),
+                Container(
+                  child: button(context, "Add", 0.03, 0.2, 0.25, () async {
+                    DocumentReference newProduct = await product.add({
+                      'harga': hargaController.text,
+                      'kategori': selectedCategory,
+                      'deskripsi': descController.text,
+                      'ekstensi': _img!.path.split(".").last
+                    });
+
+                    await FirebaseStorage.instance
+                        .ref()
+                        .child(
+                            'product/${newProduct.id}.${_img!.path.split(".").last}')
+                        .putFile(File(_img!.path))
+                        .then((value1) {
+                      showAlertDialog(context, "Pemberitahuan",
+                          "Produk Berhasil Ditambahkan", exit: true);
+                    });
+                  }),
+                )
               ],
             ),
           ),

@@ -228,3 +228,26 @@ Widget category(context, Category) {
         );
       }));
 }
+
+Future<dynamic> showAlertDialog(BuildContext context, 
+                                String judul,
+                                String konten, {bool exit = false}) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(judul),
+        content: Text(konten),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+              if(exit) Navigator.of(context).pop(true);
+            },
+            child: const Text("OK"),
+          ),
+        ],
+      );
+    },
+  );
+}

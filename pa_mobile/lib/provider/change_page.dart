@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class changepage extends ChangeNotifier {
+class ChangePage extends ChangeNotifier {
   int selected = 0;
   int get selects => selected;
   change(index) {
