@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:pa_mobile/screen/welcome.dart';
+import 'package:pa_mobile/screen/widget.dart';
 import 'package:pa_mobile/services/storage.dart';
 
 class IntroductionPage extends StatelessWidget {
@@ -92,9 +93,9 @@ class IntroductionPage extends StatelessWidget {
                 ],
                 showNextButton: true,
                 showSkipButton: true,
-                skip: const Text("Lewati"),
-                next: const Text("Selanjutnya"),
-                done: const Text("Selesai"),
+                skip: texts(context, "Lewati", 16, TextAlign.start),
+                next: texts(context, "Selanjutnya", 16, TextAlign.start),
+                done: texts(context, "Selesai", 16, TextAlign.start),
                 onSkip: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(
@@ -122,7 +123,8 @@ class IntroductionPage extends StatelessWidget {
               );
             }
           }
-          return Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+              body: Center(child: CircularProgressIndicator()));
         });
   }
 }
