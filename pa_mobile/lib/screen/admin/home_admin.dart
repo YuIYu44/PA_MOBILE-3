@@ -224,6 +224,7 @@ class _home_adminState extends State<home_admin> {
                           TextButton(
                             onPressed: () async {
                               FirebaseAuth.instance.signOut();
+                              Navigator.pop(context);
                             },
                             child: texts_2(context, "Logout", 16,
                                 TextAlign.start, FontWeight.normal),
