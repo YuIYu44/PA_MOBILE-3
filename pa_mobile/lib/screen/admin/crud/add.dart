@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pa_mobile/screen/widget.dart';
 
@@ -20,15 +21,17 @@ class _AddScreenState extends State<AddScreen> {
   XFile? _img;
   final _picker = ImagePicker();
 
-  String selectedCategory = "";
+  String? selectedCategory;
 
   List<Map<String, String>> items = [
-    {"name": "Celana"},
-    {"name": "Baju"},
-    {"name": "Hoodie"},
-    {"name": "Sweater"},
+    {"name": "Cardigan"},
     {"name": "Jaket"},
-    {"name": "Topi"},
+    {"name": "Sweater"},
+    {"name": "Hoodie"},
+    {"name": "Kemeja"},
+    {"name": "Kaos"},
+    {"name": "Jeans"},
+    {"name": "Short"}
   ];
 
   @override
@@ -139,6 +142,13 @@ class _AddScreenState extends State<AddScreen> {
                     buildRadioTile(items[5]),
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buildRadioTile(items[6]),
+                    buildRadioTile(items[7]),
+                  ],
+                ),
                 Container(
                   child: button(context, "Add", 0.03, 0.2, 0.25, () async {
                     DocumentReference newProduct = await product.add({
@@ -155,7 +165,8 @@ class _AddScreenState extends State<AddScreen> {
                         .putFile(File(_img!.path))
                         .then((value1) {
                       showAlertDialog(context, "Pemberitahuan",
-                          "Produk Berhasil Ditambahkan", exit: true);
+                          "Produk Berhasil Ditambahkan",
+                          exit: true);
                     });
                   }),
                 )
@@ -168,19 +179,30 @@ class _AddScreenState extends State<AddScreen> {
   }
 
   Widget buildRadioTile(Map<String, String> item) {
-    return Row(
-      children: [
-        Radio(
-          value: item["name"],
-          groupValue: selectedCategory,
-          onChanged: (value) {
-            setState(() {
-              selectedCategory = value.toString();
-            });
-          },
-        ),
-        Text(item["name"]!),
-      ],
+    return SizedBox(
+      width: 120,
+      child: Row(
+        children: [
+          Radio(
+            value: item["name"],
+            groupValue: selectedCategory,
+            activeColor: Theme.of(context).iconTheme.color,
+            onChanged: (value) {
+              setState(() {
+                selectedCategory = value.toString();
+              });
+            },
+          ),
+          Text(
+            item["name"]!,
+            style: GoogleFonts.lora(
+              textStyle: Theme.of(context).textTheme.bodyLarge,
+              fontSize: 14,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
     );
   }
 }
