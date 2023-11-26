@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pa_mobile/provider/change_page.dart';
@@ -25,6 +27,11 @@ class home extends StatelessWidget {
     "assets/diskon.png",
     "assets/3THRIFT.png"
   ];
+  Future<String> _getImage(photoPath) async {
+    final ref = FirebaseStorage.instance.ref().child(photoPath);
+    String url = await ref.getDownloadURL();
+    return url;
+  }
 
   Widget _homepage(BuildContext context) {
     return SingleChildScrollView(

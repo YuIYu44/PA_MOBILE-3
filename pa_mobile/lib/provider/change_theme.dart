@@ -25,10 +25,10 @@ class CustomTheme extends ChangeNotifier {
   setLightMode() {
     currentTheme = ThemeData(
       useMaterial3: true,
-      scaffoldBackgroundColor: Color(0xffF1F6F9),
-      iconTheme: IconThemeData(color: Color(0xff212A3E)),
-      cardColor: Color(0xEE9BA4B5),
-      textTheme: TextTheme(
+      scaffoldBackgroundColor: const Color(0xffF1F6F9),
+      iconTheme: const IconThemeData(color: Color(0xff212A3E)),
+      cardColor: const Color(0xEE9BA4B5),
+      textTheme: const TextTheme(
         bodyLarge: TextStyle(color: Colors.black87),
       ),
     );
@@ -38,10 +38,10 @@ class CustomTheme extends ChangeNotifier {
   setDarkmode() {
     currentTheme = ThemeData(
       useMaterial3: true,
-      scaffoldBackgroundColor: Color(0xff212A3E),
-      cardColor: Color(0xff394867),
-      iconTheme: IconThemeData(color: Color(0xffF1F6F9)),
-      textTheme: TextTheme(
+      scaffoldBackgroundColor: const Color(0xff212A3E),
+      cardColor: const Color(0xff394867),
+      iconTheme: const IconThemeData(color: Color(0xffF1F6F9)),
+      textTheme: const TextTheme(
         bodyLarge: TextStyle(color: Colors.white70),
       ),
     );
