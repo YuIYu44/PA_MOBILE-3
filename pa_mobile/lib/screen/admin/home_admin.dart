@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,7 +13,7 @@ import 'package:pa_mobile/screen/widget.dart';
 import 'package:provider/provider.dart';
 
 class home_admin extends StatefulWidget {
-  home_admin({super.key});
+  const home_admin({super.key});
 
   @override
   State<home_admin> createState() => _home_adminState();
@@ -202,20 +204,29 @@ class _home_adminState extends State<home_admin> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text("Konfirmasi Logout"),
-                        content: const Text("Apakah Anda yakin ingin logout?"),
+                        title: texts_2(context, "Konfirmasi Logout", 20,
+                            TextAlign.start, FontWeight.normal),
+                        content: texts_2(
+                            context,
+                            "Apakah Anda Yakin Ingin Logout ?",
+                            16,
+                            TextAlign.start,
+                            FontWeight.normal),
+                        backgroundColor: Theme.of(context).cardColor,
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            child: const Text("Batal"),
+                            child: texts_2(context, "Batal", 16,
+                                TextAlign.start, FontWeight.normal),
                           ),
                           TextButton(
                             onPressed: () async {
                               FirebaseAuth.instance.signOut();
                             },
-                            child: const Text("Logout"),
+                            child: texts_2(context, "Logout", 16,
+                                TextAlign.start, FontWeight.normal),
                           ),
                         ],
                       );
