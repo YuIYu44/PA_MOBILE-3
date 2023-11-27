@@ -1,9 +1,13 @@
+// ignore_for_file: unnecessary_null_comparison, non_constant_identifier_names, camel_case_types
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pa_mobile/screen/widget.dart';
+import 'package:pa_mobile/services/auth.dart';
+import 'package:pa_mobile/services/user_service.dart';
 
 class chosen_clothes extends StatelessWidget {
   final String kind;
@@ -24,8 +28,7 @@ class chosen_clothes extends StatelessWidget {
     'CELANA': ["Jeans", "Short"],
   };
 
-  bool _isTap =
-      false; //heart change after futurebuild database of user favorite
+  bool _isTap = false;
 
   @override
   Widget build(BuildContext context) {
@@ -81,11 +84,10 @@ class chosen_clothes extends StatelessWidget {
                         return Text("Error: ${snapshot.error}");
                       }
 
-                      // Define the selected category (change this based on your logic)
-                      String selectedCategory = kind
-                          .toLowerCase(); // Change this to the desired category
+                      // Memilih kategori
+                      String selectedCategory = kind.toLowerCase();
 
-                      // Filter products based on the selected category and items
+                      // Filter produk berdasarkan kategori dan item yang dipilih
                       var filteredProducts = snapshot.data!.docs
                           .where((doc) =>
                               doc.get('kategori').toString().toLowerCase() ==
@@ -151,7 +153,7 @@ class chosen_clothes extends StatelessWidget {
                         16,
                         TextAlign.start,
                         FontWeight.bold,
-                      ), //harga
+                      ),
                       texts_2(
                         context,
                         product.get('deskripsi'),
@@ -161,115 +163,110 @@ class chosen_clothes extends StatelessWidget {
                       ),
                     ],
                   ),
-                ), //keterangan
+                ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // FutureBuilder<User?>(
-                    //   future: FirebaseAuth.instance.authStateChanges().first,
-                    //   builder: (context, userSnapshot) {
-                    //     if (userSnapshot.connectionState ==
-                    //         ConnectionState.waiting) {
-                    //       return CircularProgressIndicator();
-                    //     }
+                    FutureBuilder(
+                        future: Auth().getcurrent(),
+                        builder: (context, userSnapshot) {
+                          if (userSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          }
 
-                    //     if (userSnapshot.hasError) {
-                    //       return Text("Error: ${userSnapshot.error}");
-                    //     }
+                          if (userSnapshot.hasError) {
+                            return Text("Error: ${userSnapshot.error}");
+                          }
 
-                    //     User? user = userSnapshot.data;
+                          User? user = userSnapshot.data;
 
-                    //     return FutureBuilder<DocumentSnapshot>(
-                    //       future: FirebaseFirestore.instance
-                    //           .collection("users")
-                    //           .doc(user?.email)
-                    //           .get(),
-                    //       builder: (context, userDocSnapshot) {
-                    //         if (userDocSnapshot.connectionState ==
-                    //             ConnectionState.waiting) {
-                    //           return CircularProgressIndicator();
-                    //         }
+                          return FutureBuilder<DocumentSnapshot>(
+                            future: FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(user?.email)
+                                .get(),
+                            builder: (context, userDocSnapshot) {
+                              if (userDocSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              }
 
-                    //         if (userDocSnapshot.hasError) {
-                    //           return Text("Error: ${userDocSnapshot.error}");
-                    //         }
+                              if (userDocSnapshot.hasError) {
+                                return Text("Error: ${userDocSnapshot.error}");
+                              }
 
-                    //         // Extract favorites data from the user's doc
-                    //         List<dynamic> favorites =
-                    //             userDocSnapshot.data?.get('favorites') ?? [];
+                              // Extract favorites data from the user's doc
 
-                    //         return FutureBuilder<QuerySnapshot>(
-                    //           future: FirebaseFirestore.instance
-                    //               .collection("product")
-                    //               .get(),
-                    //           builder: (BuildContext context, productSnapshot) {
-                    //             if (productSnapshot.connectionState ==
-                    //                 ConnectionState.waiting) {
-                    //               return CircularProgressIndicator();
-                    //             }
+                              return FutureBuilder<QuerySnapshot>(
+                                future: FirebaseFirestore.instance
+                                    .collection("product")
+                                    .get(),
+                                builder:
+                                    (BuildContext context, productSnapshot) {
+                                  return FutureBuilder(
+                                    future: userservice()
+                                        .favoriteContent(user!.email!),
+                                    builder: (BuildContext context,
+                                        favoriteSnapshot) {
+                                      if (productSnapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const CircularProgressIndicator();
+                                      }
 
-                    //             if (productSnapshot.hasError) {
-                    //               return Text(
-                    //                   "Error: ${productSnapshot.error}");
-                    //             }
+                                      if (productSnapshot.hasError) {
+                                        return Text(
+                                            "Error: ${productSnapshot.error}");
+                                      }
 
-                    //             // Extract product data from the snapshot
-                    //             List<DocumentSnapshot> products =
-                    //                 productSnapshot.data!.docs;
+                                      // Extract product data from the snapshot
+                                      List<DocumentSnapshot> products =
+                                          productSnapshot.data!.docs;
 
-                    //             return IconButton(
-                    //               onPressed: () async {
-                    //                 _isTap = !_isTap;
-                    //                 if (user != null) {
-                    //                   // Get the ID of the current product
-                    //                   String productId =
-                    //                       productSnapshot.data!.docs as String;
+                                      return IconButton(
+                                        onPressed: () async {
+                                          _isTap = !_isTap;
+                                          if (user != null) {
+                                            userservice().addfavorite(
+                                                user.email!, product.id);
 
-                    //                   // Check if the product is already in favorites
-                    //                   if (!favorites.contains(productId)) {
-                    //                     // Reference to the user's document in Firestore
-                    //                     var userDocRef = FirebaseFirestore
-                    //                         .instance
-                    //                         .collection("users")
-                    //                         .doc(user.email);
-
-                    //                     // Update the user's document to add the product to the favorites field
-                    //                     await userDocRef.update({
-                    //                       'favorites': FieldValue.arrayUnion(
-                    //                           [productId]),
-                    //                     });
-
-                    //                     // Show a notification to indicate that the product has been added to favorites
-                    //                     showAlertDialog(
-                    //                         context,
-                    //                         "Pemberitahuan",
-                    //                         "Produk Favorit Berhasil Ditambahkan",
-                    //                         exit: false);
-                    //                   } else {
-                    //                     // Product is already in favorites, handle accordingly
-                    //                     showAlertDialog(
-                    //                         context,
-                    //                         "Pemberitahuan",
-                    //                         "Produk sudah ada di favorit",
-                    //                         exit: false);
-                    //                   }
-                    //                 }
-                    //               },
-                    //               icon: Icon(
-                    //                 CupertinoIcons.heart_fill,
-                    //                 size: 35,
-                    //                 color: favorites.contains(productSnapshot
-                    //                         .data!.docs as String)
-                    //                     ? Colors.red
-                    //                     : Theme.of(context).cardColor,
-                    //               ),
-                    //             );
-                    //           },
-                    //         );
-                    //       },
-                    //     );
-                    //   },
-                    // )
+                                            // Menampilkan notifikasi bahwa produk berhasil ditambahkan ke favorite
+                                            showAlertDialog(
+                                                context,
+                                                "Pemberitahuan",
+                                                "Produk Favorit Berhasil Ditambahkan",
+                                                exit: false);
+                                          } else {
+                                            // Menampilkan notifikasi bahwa produk sudah ada di favorite
+                                            showAlertDialog(
+                                                context,
+                                                "Pemberitahuan",
+                                                "Produk sudah ada di favorit",
+                                                exit: false);
+                                          }
+                                        },
+                                        icon: Icon(CupertinoIcons.heart_fill,
+                                            size: 35,
+                                            color: favoriteSnapshot
+                                                        .data["Favorites"] ==
+                                                    null
+                                                ? Theme.of(context)
+                                                    .scaffoldBackgroundColor
+                                                : favoriteSnapshot
+                                                        .data["Favorites"]
+                                                        .contains(product.id
+                                                            as String)
+                                                    ? Colors.red
+                                                    : Theme.of(context)
+                                                        .scaffoldBackgroundColor),
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        })
                   ],
                 )
               ],
