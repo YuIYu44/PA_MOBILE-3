@@ -5,7 +5,7 @@ import 'package:pa_mobile/screen/widget.dart';
 import 'package:pa_mobile/services/storage.dart';
 
 class IntroductionPage extends StatelessWidget {
-  const IntroductionPage({Key? key});
+  const IntroductionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class IntroductionPage extends StatelessWidget {
         future: Storage().get_link("introduction"),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData && snapshot.data!.length > 0) {
+            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
               return IntroductionScreen(
                 globalBackgroundColor:
                     Theme.of(context).scaffoldBackgroundColor,
