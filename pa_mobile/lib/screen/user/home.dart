@@ -1,5 +1,4 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -284,7 +283,39 @@ class home extends StatelessWidget {
                                     changepass(snapshot.data.id)));
                           }),
                           button(context, "Log Out", 0.02, 0, 0.7, () async {
-                            FirebaseAuth.instance.signOut();
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: texts_2(context, "Konfirmasi Logout",
+                                      20, TextAlign.start, FontWeight.normal),
+                                  content: texts_2(
+                                      context,
+                                      "Apakah Anda Yakin Ingin Logout ?",
+                                      16,
+                                      TextAlign.start,
+                                      FontWeight.normal),
+                                  backgroundColor: Theme.of(context).cardColor,
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: texts_2(context, "Batal", 16,
+                                          TextAlign.start, FontWeight.normal),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        FirebaseAuth.instance.signOut();
+                                        Navigator.pop(context);
+                                      },
+                                      child: texts_2(context, "Logout", 16,
+                                          TextAlign.start, FontWeight.normal),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           })
                         ],
                       );
