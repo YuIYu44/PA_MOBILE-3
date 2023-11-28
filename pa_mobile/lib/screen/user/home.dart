@@ -37,7 +37,7 @@ class home extends StatelessWidget {
                     left: MediaQuery.of(context).size.width * 0.8,
                     bottom: MediaQuery.of(context).size.height * 0.03),
                 child: IconButton(
-                    icon: Icon(CupertinoIcons.moon, size: 30),
+                    icon: const Icon(CupertinoIcons.moon, size: 30),
                     onPressed: () {
                       Provider.of<CustomTheme>(context, listen: false)
                           .preferenced(1);
@@ -57,7 +57,7 @@ class home extends StatelessWidget {
                             itemBuilder: (BuildContext context, int itemIndex,
                                     int pageViewIndex) =>
                                 Container(
-                              margin: EdgeInsets.all(8.0),
+                              margin: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.0),
                                 image: DecorationImage(
@@ -73,7 +73,7 @@ class home extends StatelessWidget {
                               autoPlayCurve: Curves.fastOutSlowIn,
                               enableInfiniteScroll: true,
                               autoPlayAnimationDuration:
-                                  Duration(milliseconds: 1000),
+                                  const Duration(milliseconds: 1000),
                               viewportFraction: 0.8,
                             ),
                           ),
@@ -87,7 +87,8 @@ class home extends StatelessWidget {
                     return SizedBox(
                         width: MediaQuery.of(context).size.width * 0.9,
                         height: MediaQuery.of(context).size.height * 0.2,
-                        child: Center(child: CircularProgressIndicator()));
+                        child:
+                            const Center(child: CircularProgressIndicator()));
                   }),
               Container(
                   margin: EdgeInsets.only(
@@ -117,91 +118,109 @@ class home extends StatelessWidget {
                               .doc(productId)
                               .get(),
                           builder: (context, productSnapshot) {
-                            return (productSnapshot.hasData)
-                                ? Row(
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.35,
-                                        height:
-                                            MediaQuery.of(context).size.width *
-                                                0.35,
-                                        child: FutureBuilder(
-                                          future: Storage().getImage(
-                                              "product/$productId.${productSnapshot.data!.get('ekstensi')}"),
-                                          builder: (context, snapshot2) {
-                                            return (snapshot2.hasData &&
-                                                    snapshot2.connectionState ==
-                                                        ConnectionState.done)
-                                                ? Image.network(
-                                                    snapshot2.data!,
-                                                    fit: BoxFit.cover,
-                                                  )
-                                                : Container();
-                                          },
+                            if (productSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (productSnapshot.hasError) {
+                              return Text('Error: ${productSnapshot.error}');
+                            } else if (!productSnapshot.hasData ||
+                                !productSnapshot.data!.exists) {
+                              userservice().deletefavorite(productId);
+                              return Container();
+                            } else {
+                              return (productSnapshot.hasData)
+                                  ? Row(
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.35,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.35,
+                                          child: FutureBuilder(
+                                            future: Storage().getImage(
+                                                "product/$productId.${productSnapshot.data!.get('ekstensi')}"),
+                                            builder: (context, snapshot2) {
+                                              return (snapshot2.hasData &&
+                                                      snapshot2
+                                                              .connectionState ==
+                                                          ConnectionState.done)
+                                                  ? Image.network(
+                                                      snapshot2.data!,
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  : Container();
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        color: Theme.of(context).cardColor,
-                                        height:
-                                            MediaQuery.of(context).size.width *
-                                                0.35,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.58,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Container(
-                                              margin: const EdgeInsets.only(
-                                                  top: 5, bottom: 5),
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.35,
-                                              child: Column(
-                                                children: [
-                                                  texts_2(
-                                                      context,
-                                                      "Rp. ${productSnapshot.data!.get('harga')}",
-                                                      16,
-                                                      TextAlign.start,
-                                                      FontWeight.bold),
-                                                  texts_2(
-                                                      context,
-                                                      productSnapshot.data!
-                                                          .get('deskripsi'),
-                                                      13,
-                                                      TextAlign.start,
-                                                      FontWeight.normal)
-                                                ],
-                                              ),
-                                            ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                IconButton(
-                                                  onPressed: () async {
-                                                    userservice()
-                                                        .deletefavorite(
-                                                            productId);
-                                                  },
-                                                  icon: const Icon(
-                                                    CupertinoIcons.trash,
-                                                    size: 35,
-                                                  ),
+                                        Container(
+                                          color: Theme.of(context).cardColor,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.35,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.58,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    top: 5, bottom: 5),
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.35,
+                                                child: Column(
+                                                  children: [
+                                                    texts_2(
+                                                        context,
+                                                        "Rp. ${productSnapshot.data!.get('harga')}",
+                                                        16,
+                                                        TextAlign.start,
+                                                        FontWeight.bold),
+                                                    texts_2(
+                                                        context,
+                                                        productSnapshot.data!
+                                                            .get('deskripsi'),
+                                                        13,
+                                                        TextAlign.start,
+                                                        FontWeight.normal)
+                                                  ],
                                                 ),
-                                              ],
-                                            )
-                                          ],
+                                              ),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  IconButton(
+                                                    onPressed: () async {
+                                                      userservice()
+                                                          .deletefavorite(
+                                                              productId);
+                                                    },
+                                                    icon: const Icon(
+                                                      CupertinoIcons.trash,
+                                                      size: 35,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  )
-                                : CircularProgressIndicator();
+                                      ],
+                                    )
+                                  : const CircularProgressIndicator();
+                            }
+                            ;
                           },
                         ),
                       );
@@ -254,7 +273,7 @@ class home extends StatelessWidget {
               return SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
                   height: MediaQuery.of(context).size.height * 0.2,
-                  child: Center(child: CircularProgressIndicator()));
+                  child: const Center(child: CircularProgressIndicator()));
             }));
   }
 
@@ -292,7 +311,7 @@ class home extends StatelessWidget {
                   }
                   return Container(
                     color: ThemeData().scaffoldBackgroundColor,
-                    child: Center(child: CircularProgressIndicator()),
+                    child: const Center(child: CircularProgressIndicator()),
                   );
                 })));
   }
@@ -325,14 +344,14 @@ class home extends StatelessWidget {
                 showSelectedLabels: false,
                 showUnselectedLabels: false,
                 items: [
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.home, size: 35), label: "Home"),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.heart, size: 35),
                       label: "favorite"),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.info, size: 35), label: "Info"),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.profile_circled, size: 35),
                       label: "Profile"),
                 ],

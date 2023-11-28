@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_null_comparison, non_constant_identifier_names, camel_case_types
+// ignore_for_file: unnecessary_null_comparison, non_constant_identifier_names, camel_case_types, unused_local_variable, unnecessary_cast, must_be_immutable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -187,8 +187,7 @@ class chosenClothes extends StatelessWidget {
                                       _isTap = !_isTap;
 
                                       //   if (user != null) {
-                                      //     userservice().addfavorite(
-                                      //          product.id);
+                                      userservice().addfavorite(product.id);
 
                                       //     // Menampilkan notifikasi bahwa produk berhasil ditambahkan ke favorite
                                       //     showAlertDialog(
