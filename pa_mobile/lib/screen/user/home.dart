@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pa_mobile/provider/change_page.dart';
@@ -26,11 +26,6 @@ class home extends StatelessWidget {
     "assets/diskon.png",
     "assets/3THRIFT.png"
   ];
-  Future<String> _getImage(photoPath) async {
-    final ref = FirebaseStorage.instance.ref().child(photoPath);
-    String url = await ref.getDownloadURL();
-    return url;
-  }
 
   Widget _homepage(BuildContext context) {
     return SingleChildScrollView(
@@ -105,110 +100,116 @@ class home extends StatelessWidget {
 
   Widget favorite(BuildContext context) {
     return Padding(
-      padding: customEdgeInsets(context, 0.03, 0.02),
-      child: FutureBuilder(
-        future: FirebaseFirestore.instance.collection("product").get(),
-        // FirebaseFirestore.instance
-        //     .collection("users")
-        //     .doc("currentUserId")
-        //     .collection("favorite")
-        //     .get(),
-        builder: (BuildContext context, snapshot) {
-          return (snapshot.hasData)
-              ? ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.35,
-                            height: MediaQuery.of(context).size.width * 0.35,
-                            child: FutureBuilder<String>(
-                              future: _getImage(
-                                "product/${snapshot.data!.docs[index].id}.${snapshot.data!.docs[index].get('ekstensi')}",
-                              ),
-                              builder:
-                                  (context, AsyncSnapshot<String> snapshot2) {
-                                return (snapshot2.hasData)
-                                    ? Image.network(
-                                        snapshot2.data!,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Container();
-                              },
-                            ),
-                          ),
-                          Container(
-                            color: Theme.of(context).cardColor,
-                            height: MediaQuery.of(context).size.width * 0.35,
-                            width: MediaQuery.of(context).size.width * 0.58,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Container(
-                                  margin:
-                                      const EdgeInsets.only(top: 5, bottom: 5),
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.35,
-                                  child: Column(
+        padding: customEdgeInsets(context, 0.03, 0.02),
+        child: FutureBuilder(
+          future: userservice().favoriteContent(),
+          builder: (BuildContext context, snapshot) {
+            return (snapshot.hasData)
+                ? ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      String productId = snapshot.data[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: FutureBuilder<DocumentSnapshot>(
+                          future: FirebaseFirestore.instance
+                              .collection("product")
+                              .doc(productId)
+                              .get(),
+                          builder: (context, productSnapshot) {
+                            return (productSnapshot.hasData)
+                                ? Row(
                                     children: [
-                                      texts_2(
-                                        context,
-                                        "Rp. ${snapshot.data!.docs[index].get('harga')}",
-                                        16,
-                                        TextAlign.start,
-                                        FontWeight.bold,
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.35,
+                                        height:
+                                            MediaQuery.of(context).size.width *
+                                                0.35,
+                                        child: FutureBuilder(
+                                          future: Storage().getImage(
+                                              "product/$productId.${productSnapshot.data!.get('ekstensi')}"),
+                                          builder: (context, snapshot2) {
+                                            return (snapshot2.hasData &&
+                                                    snapshot2.connectionState ==
+                                                        ConnectionState.done)
+                                                ? Image.network(
+                                                    snapshot2.data!,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Container();
+                                          },
+                                        ),
                                       ),
-                                      texts_2(
-                                        context,
-                                        snapshot.data!.docs[index]
-                                            .get('deskripsi'),
-                                        13,
-                                        TextAlign.start,
-                                        FontWeight.normal,
+                                      Container(
+                                        color: Theme.of(context).cardColor,
+                                        height:
+                                            MediaQuery.of(context).size.width *
+                                                0.35,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.58,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  top: 5, bottom: 5),
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.35,
+                                              child: Column(
+                                                children: [
+                                                  texts_2(
+                                                      context,
+                                                      "Rp. ${productSnapshot.data!.get('harga')}",
+                                                      16,
+                                                      TextAlign.start,
+                                                      FontWeight.bold),
+                                                  texts_2(
+                                                      context,
+                                                      productSnapshot.data!
+                                                          .get('deskripsi'),
+                                                      13,
+                                                      TextAlign.start,
+                                                      FontWeight.normal)
+                                                ],
+                                              ),
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                IconButton(
+                                                  onPressed: () async {
+                                                    userservice()
+                                                        .deletefavorite(
+                                                            productId);
+                                                  },
+                                                  icon: const Icon(
+                                                    CupertinoIcons.trash,
+                                                    size: 35,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ],
-                                  ),
-                                ),
-                                Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    IconButton(
-                                        onPressed: () async {
-                                          FirebaseFirestore.instance
-                                              .collection("favorite")
-                                              .doc(
-                                                  snapshot.data!.docs[index].id)
-                                              .delete();
-
-                                          final desertRef = FirebaseStorage
-                                              .instance
-                                              .ref()
-                                              .child(
-                                                  "favorite/${snapshot.data!.docs[index].id}.${snapshot.data!.docs[index].get('ekstensi')}");
-
-                                          await desertRef.delete();
-                                        },
-                                        icon: const Icon(
-                                          CupertinoIcons.trash,
-                                          size: 35,
-                                        )),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  })
-              : const Text("Tidak Ada Produk Favorite");
-        },
-      ),
-    );
+                                  )
+                                : CircularProgressIndicator();
+                          },
+                        ),
+                      );
+                    },
+                  )
+                : const Text("Tidak Ada Produk Favorite");
+          },
+        ));
   }
 
   Widget info(BuildContext context) {
@@ -283,39 +284,7 @@ class home extends StatelessWidget {
                                     changepass(snapshot.data.id)));
                           }),
                           button(context, "Log Out", 0.02, 0, 0.7, () async {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: texts_2(context, "Konfirmasi Logout",
-                                      20, TextAlign.start, FontWeight.normal),
-                                  content: texts_2(
-                                      context,
-                                      "Apakah Anda Yakin Ingin Logout ?",
-                                      16,
-                                      TextAlign.start,
-                                      FontWeight.normal),
-                                  backgroundColor: Theme.of(context).cardColor,
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: texts_2(context, "Batal", 16,
-                                          TextAlign.start, FontWeight.normal),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        FirebaseAuth.instance.signOut();
-                                        Navigator.pop(context);
-                                      },
-                                      child: texts_2(context, "Logout", 16,
-                                          TextAlign.start, FontWeight.normal),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
+                            FirebaseAuth.instance.signOut();
                           })
                         ],
                       );

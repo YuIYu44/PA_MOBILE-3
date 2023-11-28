@@ -209,7 +209,7 @@ Widget category(context, Category) {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              chosen_clothes(Category[
+                                              chosenClothes(Category[
                                                       Category.keys.elementAt(
                                                           index)]![index2]
                                                   .toString()
@@ -229,9 +229,9 @@ Widget category(context, Category) {
       }));
 }
 
-Future<dynamic> showAlertDialog(BuildContext context, 
-                                String judul,
-                                String konten, {bool exit = false}) {
+Future<dynamic> showAlertDialog(
+    BuildContext context, String judul, String konten,
+    {bool exit = false}) {
   return showDialog(
     context: context,
     builder: (context) {
@@ -242,7 +242,7 @@ Future<dynamic> showAlertDialog(BuildContext context,
           TextButton(
             onPressed: () {
               Navigator.of(context).pop(true);
-              if(exit) Navigator.of(context).pop(true);
+              if (exit) Navigator.of(context).pop(true);
             },
             child: const Text("OK"),
           ),

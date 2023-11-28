@@ -11,31 +11,39 @@ class userservice {
     if (email == null) {
       return null;
     }
+
     return await _userCollection.doc(email).get();
   }
 
-  Future addfavorite(String user, String productId) async {
-    var dcs =
-        (await _userCollection.doc(user).get()).data() as Map<String, dynamic>;
-    DocumentReference docRef = await _userCollection.doc(user);
+  Future addfavorite(String productId) async {
+    String email = (await uservalue()).id;
+    DocumentReference docRef = await _userCollection.doc(email);
     await docRef.update({
       'Favorite': FieldValue.arrayUnion([productId])
     });
   }
 
-  Future favoriteContent(String user) async {
+  Future favoriteContent() async {
+    String email = (await uservalue()).id;
     var dcs =
-        (await _userCollection.doc(user).get()).data() as Map<String, dynamic>;
+        (await _userCollection.doc(email).get()).data() as Map<String, dynamic>;
     if (dcs.containsKey("Favorite") && dcs["Favorite"] != null) {
-      return dcs;
+      return dcs["Favorite"];
     }
     return {
       "Favorite": [""]
     };
   }
 
-  Future deletefavorite(String user) async {
-    var dcs = await _userCollection.doc(user).get() as Map<String, dynamic>;
-    if (dcs.containsKey("Favorite")) {}
+  Future deletefavorite(String productId) async {
+    String email = (await uservalue()).id;
+    var dcs =
+        (await _userCollection.doc(email).get()).data() as Map<String, dynamic>;
+    DocumentReference docRef = await _userCollection.doc(email);
+    if (dcs.containsKey("Favorite")) {
+      docRef.update({
+        'Favorite': FieldValue.arrayRemove([productId])
+      });
+    }
   }
 }

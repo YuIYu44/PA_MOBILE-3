@@ -19,4 +19,10 @@ class Storage {
       return [];
     }
   }
+
+  Future<String> getImage(photoPath) async {
+    final ref = await _storage.ref().child(photoPath);
+    String url = await ref.getDownloadURL();
+    return url;
+  }
 }
