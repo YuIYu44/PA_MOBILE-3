@@ -220,7 +220,6 @@ class home extends StatelessWidget {
                                     )
                                   : const CircularProgressIndicator();
                             }
-                            ;
                           },
                         ),
                       );
@@ -343,15 +342,15 @@ class home extends StatelessWidget {
                 },
                 showSelectedLabels: false,
                 showUnselectedLabels: false,
-                items: [
-                  const BottomNavigationBarItem(
+                items: const [
+                  BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.home, size: 35), label: "Home"),
-                  const BottomNavigationBarItem(
+                  BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.heart, size: 35),
                       label: "favorite"),
-                  const BottomNavigationBarItem(
+                  BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.info, size: 35), label: "Info"),
-                  const BottomNavigationBarItem(
+                  BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.profile_circled, size: 35),
                       label: "Profile"),
                 ],

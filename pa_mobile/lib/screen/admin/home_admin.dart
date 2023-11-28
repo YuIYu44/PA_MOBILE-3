@@ -12,6 +12,8 @@ import 'package:pa_mobile/provider/change_theme.dart';
 import 'package:pa_mobile/screen/widget.dart';
 import 'package:provider/provider.dart';
 
+import '../../services/product.dart';
+
 class home_admin extends StatefulWidget {
   const home_admin({super.key});
 
@@ -20,7 +22,9 @@ class home_admin extends StatefulWidget {
 }
 
 class _home_adminState extends State<home_admin> {
-  // final List<String> category_atasan = [
+  Future<List<Product>>? prodList;
+  List<Product>? retrievedProdList;
+
   Future<String> _getImage(photoPath) async {
     final ref = FirebaseStorage.instance.ref().child(photoPath);
     String url = await ref.getDownloadURL();
@@ -47,10 +51,13 @@ class _home_adminState extends State<home_admin> {
             child: FutureBuilder(
               future: FirebaseFirestore.instance.collection("product").get(),
               builder: (BuildContext context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
                 return (snapshot.hasData)
                     ? ListView.builder(
                         itemCount: snapshot.data!.docs.length,
                         itemBuilder: (context, index) {
+                          QueryDocumentSnapshot<Map<String, dynamic>> dat = snapshot.data!.docs[index];
+
                           return Padding(
                             padding: const EdgeInsets.only(top: 20),
                             child: Row(
@@ -62,7 +69,7 @@ class _home_adminState extends State<home_admin> {
                                       MediaQuery.of(context).size.width * 0.35,
                                   child: FutureBuilder<String>(
                                       future: _getImage(
-                                          "product/${snapshot.data!.docs[index].id}.${snapshot.data!.docs[index].get('ekstensi')}"),
+                                          "product/${dat.id}.${dat.get('ekstensi')}"),
                                       builder: (context,
                                           AsyncSnapshot<String> snapshot2) {
                                         return (snapshot2.hasData)
@@ -93,7 +100,7 @@ class _home_adminState extends State<home_admin> {
                                           children: [
                                             texts_2(
                                                 context,
-                                                "Rp. ${snapshot.data!.docs[index].get('harga')}",
+                                                "Rp. ${dat.get('harga')}",
                                                 16,
                                                 TextAlign.start,
                                                 FontWeight.bold), //harga
@@ -113,19 +120,26 @@ class _home_adminState extends State<home_admin> {
                                         children: [
                                           IconButton(
                                               onPressed: () async {
+
+                                                // ----------------- UBAH NANTI ------------------delete
+
                                                 FirebaseFirestore.instance
                                                     .collection("product")
-                                                    .doc(snapshot
-                                                        .data!.docs[index].id)
+                                                    .doc(dat.id)
                                                     .delete();
 
                                                 final desertRef = FirebaseStorage
                                                     .instance
                                                     .ref()
                                                     .child(
-                                                        "product/${snapshot.data!.docs[index].id}.${snapshot.data!.docs[index].get('ekstensi')}");
+                                                        "product/${dat.id}.${dat.get('ekstensi')}");
 
                                                 await desertRef.delete();
+
+                                                setState(() {});
+
+                                                // ----------------- UBAH NANTI ------------------delete
+
                                               },
                                               icon: const Icon(
                                                 CupertinoIcons.trash,
@@ -133,10 +147,25 @@ class _home_adminState extends State<home_admin> {
                                               )),
                                           IconButton(
                                               onPressed: () {
+
+                                                // ----------------- UBAH NANTI ------------------edit
+
                                                 Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            const editScreen()));
+                                                            EditScreen(prod: Product(
+                                                              id: dat.id,
+                                                              harga: int.parse(dat.get('harga')),
+                                                              desc: dat.get('deskripsi'),
+                                                              ekstensi: dat.get('ekstensi'),
+                                                              kategori: dat.get('kategori')
+                                                              ),
+                                                            )
+                                                    )
+                                                );
+
+                                                // ----------------- UBAH NANTI ------------------edit
+
                                               },
                                               icon: const Icon(
                                                   CupertinoIcons.pen,
@@ -150,7 +179,13 @@ class _home_adminState extends State<home_admin> {
                             ),
                           );
                         })
-                    : const Text("Kosong");
+                    : const Text("");
+                  } else{
+                    return SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  child: const Center(child: CircularProgressIndicator()));
+                  }
               },
             ),
           ),

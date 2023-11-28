@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pa_mobile/screen/widget.dart';
+
+import '../../../services/product.dart';
 
 class AddScreen extends StatefulWidget {
   const AddScreen({super.key});
@@ -36,8 +36,6 @@ class _AddScreenState extends State<AddScreen> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference product =
-        FirebaseFirestore.instance.collection("product");
 
     return WillPopScope(
       onWillPop: () {
@@ -151,23 +149,11 @@ class _AddScreenState extends State<AddScreen> {
                 ),
                 Container(
                   child: button(context, "Add", 0.03, 0.2, 0.25, () async {
-                    DocumentReference newProduct = await product.add({
-                      'harga': hargaController.text,
-                      'kategori': selectedCategory,
-                      'deskripsi': descController.text,
-                      'ekstensi': _img!.path.split(".").last
-                    });
 
-                    await FirebaseStorage.instance
-                        .ref()
-                        .child(
-                            'product/${newProduct.id}.${_img!.path.split(".").last}')
-                        .putFile(File(_img!.path))
-                        .then((value1) {
-                      showAlertDialog(context, "Pemberitahuan",
-                          "Produk Berhasil Ditambahkan",
-                          exit: true);
-                    });
+                    Product newProd = Product(harga: int.parse(hargaController.text), desc: descController.text,
+                    ekstensi: _img!.path.split(".").last, kategori: selectedCategory!);
+
+                    newProd.addData(context, _img!);
                   }),
                 )
               ],
