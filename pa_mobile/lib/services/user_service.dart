@@ -30,9 +30,7 @@ class userservice {
     if (dcs.containsKey("Favorite") && dcs["Favorite"] != null) {
       return dcs["Favorite"];
     }
-    return {
-      "Favorite": [""]
-    };
+    return null;
   }
 
   Future deletefavorite(String productId) async {

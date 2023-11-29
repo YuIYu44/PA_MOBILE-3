@@ -25,4 +25,8 @@ class Storage {
     String url = await ref.getDownloadURL();
     return url;
   }
+
+  deleteImage(photoPath) async {
+    await _storage.ref().child(photoPath).delete();
+  }
 }

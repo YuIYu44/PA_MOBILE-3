@@ -3,12 +3,15 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pa_mobile/model/product.dart';
 import 'package:pa_mobile/screen/widget.dart';
-import 'package:pa_mobile/services/product.dart';
+import 'package:pa_mobile/services/admin_service.dart';
+import 'package:pa_mobile/services/storage.dart';
 
 class EditScreen extends StatefulWidget {
+  final prodservices = adminServices();
   final Product prod;
-  const EditScreen({super.key, required this.prod});
+  EditScreen({super.key, required this.prod});
 
   @override
   State<EditScreen> createState() => _EditScreenState();
@@ -73,13 +76,14 @@ class _EditScreenState extends State<EditScreen> {
                               width: MediaQuery.of(context).size.width * 0.37,
                               height: 150,
                               child: FutureBuilder<String>(
-                                  future: widget.prod.getImageUrl(),
+                                  future: Storage().getImage(
+                                      "product/${widget.prod.id}.${widget.prod.ekstensi}"),
                                   builder: (context,
                                       AsyncSnapshot<String> snapshot2) {
                                     return (snapshot2.hasData)
                                         ? Image.network(
                                             snapshot2.data!,
-                                            fit: BoxFit.cover,
+                                            fit: BoxFit.contain,
                                           )
                                         : Container();
                                   }),
@@ -114,12 +118,12 @@ class _EditScreenState extends State<EditScreen> {
                   child: button(context, "Ubah", 0.03, 0.2, 0.45, () async {
                     widget.prod.harga = int.parse(_hargaController.text);
                     widget.prod.desc = _descController.text;
-                    if (_img != null)
+                    if (_img != null) {
                       widget.prod.ekstensi = _img!.path.split(".").last;
-                    await widget.prod.updateData(context, _img).then((value1) {
-                      showAlertDialog(
-                          context, "Pemberitahuan", "Data Berhasil Diubah");
-                    });
+                    }
+
+                    await widget.prodservices
+                        .updateData(context, _img, widget.prod);
                   }),
                 ),
               ],

@@ -3,9 +3,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pa_mobile/provider/Love_Clothes.dart';
 import 'package:pa_mobile/screen/widget.dart';
 import 'package:pa_mobile/services/storage.dart';
 import 'package:pa_mobile/services/user_service.dart';
+import 'package:provider/provider.dart';
 
 class chosenClothes extends StatelessWidget {
   final String kind;
@@ -19,8 +21,6 @@ class chosenClothes extends StatelessWidget {
   final category_bawahan = {
     'CELANA': ["Jeans", "Short"],
   };
-
-  bool _isTap = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class chosenClothes extends StatelessWidget {
                         FirebaseFirestore.instance.collection("product").get(),
                     builder: (BuildContext context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
+                        return const Center(child: CircularProgressIndicator());
                       }
 
                       if (snapshot.hasError) {
@@ -87,13 +87,19 @@ class chosenClothes extends StatelessWidget {
                           .toList();
 
                       return (filteredProducts.isNotEmpty)
-                          ? ListView.builder(
-                              itemCount: filteredProducts.length,
-                              itemBuilder: (context, index) {
-                                return buildProductCard(
-                                    filteredProducts[index], context);
-                              },
-                            )
+                          ? ChangeNotifierProvider<loveClothes>(
+                              create: (_) => loveClothes(
+                                  Theme.of(context).scaffoldBackgroundColor,
+                                  filteredProducts.length),
+                              child: Consumer<loveClothes>(
+                                  builder: (_, data, __) => ListView.builder(
+                                      itemCount: filteredProducts.length,
+                                      itemBuilder: (context, index) {
+                                        return buildProductCard(
+                                            filteredProducts[index],
+                                            context,
+                                            index);
+                                      })))
                           : const Text("Produk yang anda pilih tidak ada");
                     },
                   ),
@@ -106,9 +112,11 @@ class chosenClothes extends StatelessWidget {
     );
   }
 
-  Widget buildProductCard(DocumentSnapshot product, BuildContext context) {
+  Widget buildProductCard(
+      DocumentSnapshot product, BuildContext context, int index) {
+    var loveClothesProvider = Provider.of<loveClothes>(context, listen: false);
     return Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 10),
         child: Row(children: [
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.35,
@@ -121,7 +129,7 @@ class chosenClothes extends StatelessWidget {
                         snapshot2.connectionState == ConnectionState.done)
                     ? Image.network(
                         snapshot2.data!,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                       )
                     : Container();
               },
@@ -135,24 +143,28 @@ class chosenClothes extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(top: 5, bottom: 5),
+                      margin: const EdgeInsets.only(bottom: 5),
                       width: MediaQuery.of(context).size.width * 0.35,
                       child: Column(
                         children: [
-                          texts_2(
-                            context,
-                            "Rp. ${product.get('harga')}",
-                            16,
-                            TextAlign.start,
-                            FontWeight.bold,
-                          ),
-                          texts_2(
-                            context,
-                            product.get('deskripsi'),
-                            13,
-                            TextAlign.start,
-                            FontWeight.normal,
-                          ),
+                          Container(
+                              margin: const EdgeInsets.only(top: 10, bottom: 5),
+                              child: texts_2(
+                                context,
+                                "Rp. ${product.get('harga')}",
+                                18,
+                                TextAlign.start,
+                                FontWeight.w900,
+                              )),
+                          Container(
+                              margin: const EdgeInsets.only(bottom: 5),
+                              child: texts_2(
+                                context,
+                                product.get('deskripsi'),
+                                14,
+                                TextAlign.start,
+                                FontWeight.w600,
+                              )),
                         ],
                       ),
                     ),
@@ -165,58 +177,51 @@ class chosenClothes extends StatelessWidget {
                                 .get(),
                             builder: (BuildContext context, productSnapshot) {
                               return FutureBuilder(
-                                future: userservice().favoriteContent(),
-                                builder:
-                                    (BuildContext context, favoriteSnapshot) {
-                                  if (productSnapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const CircularProgressIndicator();
-                                  }
-
-                                  if (productSnapshot.hasError) {
-                                    return Text(
-                                        "Error: ${productSnapshot.error}");
-                                  }
-
-                                  // Extract product data from the snapshot
-                                  List<DocumentSnapshot> products =
-                                      productSnapshot.data!.docs;
-
-                                  return IconButton(
-                                    onPressed: () async {
-                                      _isTap = !_isTap;
-
-                                      //   if (user != null) {
-                                      userservice().addfavorite(product.id);
-
-                                      //     // Menampilkan notifikasi bahwa produk berhasil ditambahkan ke favorite
-                                      //     showAlertDialog(
-                                      //         context,s
-                                      //         "Pemberitahuan",
-                                      //         "Produk Favorit Berhasil Ditambahkan",
-                                      //         exit: false);
-                                      //   } else {
-                                      //     // Menampilkan notifikasi bahwa produk sudah ada di favorite
-                                      //     showAlertDialog(
-                                      //         context,
-                                      //         "Pemberitahuan",
-                                      //         "Produk sudah ada di favorit",
-                                      //         exit: false);
-                                      //   }
-                                    },
-                                    icon: Icon(CupertinoIcons.heart_fill,
-                                        size: 35,
-                                        color: favoriteSnapshot.data == null
-                                            ? Theme.of(context)
-                                                .scaffoldBackgroundColor
-                                            : favoriteSnapshot.data.contains(
-                                                    product.id as String)
-                                                ? Colors.red
-                                                : Theme.of(context)
-                                                    .scaffoldBackgroundColor),
-                                  );
-                                },
-                              );
+                                  future: userservice().favoriteContent(),
+                                  builder:
+                                      (BuildContext context, favoriteSnapshot) {
+                                    if (productSnapshot.connectionState ==
+                                        ConnectionState.done) {
+                                      if (favoriteSnapshot.data != null) {
+                                        if (favoriteSnapshot.data
+                                            .contains(product.id)) {
+                                          loveClothesProvider.atfavorite(
+                                              index, Colors.red);
+                                        }
+                                      }
+                                      // Extract product data from the snapshot
+                                      List<DocumentSnapshot> products =
+                                          productSnapshot.data!.docs;
+                                      return IconButton(
+                                          onPressed: () async {
+                                            if (loveClothesProvider
+                                                    .color(index) !=
+                                                Colors.red) {
+                                              userservice()
+                                                  .addfavorite(product.id);
+                                              showAlertDialog(
+                                                  context,
+                                                  "Pemberitahuan",
+                                                  "Produk Favorit Berhasil Ditambahkan",
+                                                  exit: false);
+                                              loveClothesProvider.changelove(
+                                                  index, Colors.red);
+                                            } else {
+                                              showAlertDialog(
+                                                  context,
+                                                  "Pemberitahuan",
+                                                  "Produk sudah ada di favorit",
+                                                  exit: false);
+                                            }
+                                          },
+                                          icon: Icon(CupertinoIcons.heart_fill,
+                                              size: 35,
+                                              color: loveClothesProvider
+                                                  .color(index)));
+                                    }
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  });
                             },
                           )
                         ])

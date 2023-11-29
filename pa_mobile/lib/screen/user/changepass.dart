@@ -42,6 +42,8 @@ class _changepass extends State<changepass> {
                                   child: IconButton(
                                     icon: Icon(CupertinoIcons.back, size: 35),
                                     onPressed: () {
+                                      newController.dispose();
+                                      oldController.dispose();
                                       Navigator.pop(context);
                                     },
                                   )),
@@ -65,6 +67,8 @@ class _changepass extends State<changepass> {
                                     newController.value.text);
                                 await error_.change(error_notif);
                                 if (error_notif == "") {
+                                  newController.dispose();
+                                  oldController.dispose();
                                   Navigator.pop(context);
                                 }
                               }),

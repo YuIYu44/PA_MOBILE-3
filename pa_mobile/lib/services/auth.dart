@@ -6,7 +6,7 @@ class Auth {
   static final CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
   Future getcurrent() async {
-    final User? user = await _auth.currentUser;
+    final User? user = _auth.currentUser;
     return user;
   }
 
