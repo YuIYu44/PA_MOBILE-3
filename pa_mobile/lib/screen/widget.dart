@@ -213,7 +213,7 @@ Widget category(context, Category) {
                                                       Category.keys.elementAt(
                                                           index)]![index2]
                                                   .toString()
-                                                  .toUpperCase())));
+                                                  )));
                                 },
                                 child: texts_2(
                                     context,

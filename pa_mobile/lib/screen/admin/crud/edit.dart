@@ -77,7 +77,7 @@ class _EditScreenState extends State<EditScreen> {
                               height: 150,
                               child: FutureBuilder<String>(
                                   future: Storage().getImage(
-                                      "product/${widget.prod.id}.${widget.prod.ekstensi}"),
+                                      "product/${widget.prod.kategori}/${widget.prod.id}.${widget.prod.ekstensi}"),
                                   builder: (context,
                                       AsyncSnapshot<String> snapshot2) {
                                     return (snapshot2.hasData)

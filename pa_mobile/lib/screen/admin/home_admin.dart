@@ -1,9 +1,11 @@
 // ignore_for_file: camel_case_types
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pa_mobile/model/product.dart';
+import 'package:pa_mobile/provider/dropdownbutton.dart';
 import 'package:pa_mobile/provider/fav_clothes.dart';
 import 'package:pa_mobile/screen/admin/crud/add.dart';
 import 'package:pa_mobile/screen/admin/crud/edit.dart';
@@ -21,205 +23,293 @@ class home_admin extends StatelessWidget {
     var adminsrv = adminServices();
     return Padding(
         padding: customEdgeInsets(context, 0.03, 0),
-        child: ChangeNotifierProvider<fav_clothes>(
-            create: (context) => fav_clothes(),
+        child: MultiProvider(
+            providers: [
+              ChangeNotifierProvider<fav_clothes>(create: (_) => fav_clothes()),
+              ChangeNotifierProvider<categoryclothes>(
+                  create: (_) => categoryclothes()),
+            ],
             child: Consumer<fav_clothes>(builder: (context, dataclothes, __) {
-              return FutureBuilder(
-                  future: dataclothes.add([""]),
-                  builder: (BuildContext context, snapshot) {
-                    return FutureBuilder(
-                      future: adminsrv.retrieveProduct(),
-                      builder: (BuildContext context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          dataclothes.add(snapshot.data);
-                          return (snapshot.hasData)
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
+              return Consumer<categoryclothes>(
+                  builder: (context, categoryclothes, __) {
+                return FutureBuilder(
+                    future: dataclothes.add([""]),
+                    builder: (BuildContext context, snapshot) {
+                      return FutureBuilder(
+                        future: adminsrv
+                            .retrieveProduct(categoryclothes.getCategory),
+                        builder: (BuildContext context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            dataclothes.add(snapshot.data);
+                            return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.zero,
+                                    margin: EdgeInsets.only(
+                                        left:
+                                            MediaQuery.of(context).size.width *
+                                                0.8),
+                                    child: IconButton(
+                                      icon: const Icon(CupertinoIcons.moon,
+                                          size: 30),
+                                      padding: EdgeInsets.zero,
+                                      onPressed: () {
+                                        Provider.of<CustomTheme>(context,
+                                                listen: false)
+                                            .preferenced(1);
+                                      },
+                                    ),
+                                  ),
+                                  Container(
+                                      padding: EdgeInsets.zero,
                                       margin: EdgeInsets.only(
-                                          left: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.8),
-                                      child: IconButton(
-                                        icon: const Icon(CupertinoIcons.moon,
-                                            size: 30),
-                                        onPressed: () {
-                                          Provider.of<CustomTheme>(context,
-                                                  listen: false)
-                                              .preferenced(1);
-                                        },
+                                        left:
+                                            MediaQuery.of(context).size.width *
+                                                0.03,
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: FutureBuilder(
-                                        future:
-                                            adminServices().retrieveProduct(),
-                                        builder:
-                                            (BuildContext context, snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.done) {
-                                            return (snapshot.hasData)
-                                                ? ListView.builder(
-                                                    itemCount:
-                                                        snapshot.data!.length,
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      Product dat =
-                                                          snapshot.data![index];
-                                                      return Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(top: 20),
-                                                        child: Row(
-                                                          children: [
-                                                            SizedBox(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.35,
-                                                              height: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.35,
-                                                              child: FutureBuilder<
-                                                                      String>(
-                                                                  future: Storage()
-                                                                      .getImage(
-                                                                          "product/${dat.id}.${dat.ekstensi}"),
-                                                                  builder: (context,
-                                                                      AsyncSnapshot<
-                                                                              String>
-                                                                          snapshot2) {
-                                                                    return (snapshot2
-                                                                            .hasData)
-                                                                        ? Image
-                                                                            .network(
-                                                                            snapshot2.data!,
-                                                                            fit:
-                                                                                BoxFit.contain,
-                                                                          )
-                                                                        : Container();
-                                                                  }),
-                                                            ),
-                                                            Container(
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .cardColor,
-                                                              height: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.35,
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.58,
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceAround,
-                                                                children: [
-                                                                  Container(
-                                                                    margin: const EdgeInsets
-                                                                        .only(
-                                                                        top: 5,
-                                                                        bottom:
-                                                                            5),
-                                                                    width: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width *
-                                                                        0.35,
-                                                                    child:
-                                                                        Column(
-                                                                      children: [
-                                                                        texts_2(
-                                                                            context,
-                                                                            "Rp. ${dat.harga}",
-                                                                            16,
-                                                                            TextAlign.start,
-                                                                            FontWeight.bold), //harga
-                                                                        texts_2(
-                                                                            context,
-                                                                            snapshot.data![index].desc,
-                                                                            13,
-                                                                            TextAlign.start,
-                                                                            FontWeight.normal)
-                                                                      ],
-                                                                    ),
-                                                                  ), //keterangan
-                                                                  Column(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceEvenly,
+                                      child: DropdownButtonHideUnderline(
+                                          child: DropdownButton2<String>(
+                                        dropdownStyleData: DropdownStyleData(
+                                            decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(14),
+                                          color: Theme.of(context)
+                                              .scaffoldBackgroundColor,
+                                        )),
+                                        value: categoryclothes.getCategory,
+                                        items: <String>[
+                                          "Cardigan",
+                                          "Jaket",
+                                          "Sweater",
+                                          "Hoodie",
+                                          "Kemeja",
+                                          "Kaos",
+                                          "Jeans",
+                                          "Short"
+                                        ].map((String val) {
+                                          return DropdownMenuItem<String>(
+                                              value: val,
+                                              child: texts_2(
+                                                context,
+                                                val,
+                                                15,
+                                                TextAlign.left,
+                                                FontWeight.normal,
+                                              ));
+                                        }).toList(),
+                                        onChanged: (String? value) {
+                                          categoryclothes
+                                              .changecategory(value!);
+                                        },
+                                      ))),
+                                  Expanded(
+                                    child: FutureBuilder(
+                                      future: adminServices().retrieveProduct(
+                                          categoryclothes.getCategory),
+                                      builder:
+                                          (BuildContext context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.done) {
+                                          return (snapshot.hasData &&
+                                                  snapshot.data!.isNotEmpty)
+                                              ? ListView.builder(
+                                                  itemCount:
+                                                      snapshot.data!.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    Product dat =
+                                                        snapshot.data![index];
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 5),
+                                                      child: Row(
+                                                        children: [
+                                                          SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.35,
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.35,
+                                                            child: FutureBuilder<
+                                                                    String>(
+                                                                future: Storage()
+                                                                    .getImage(
+                                                                        "product/${dat.kategori}/${dat.id}.${dat.ekstensi}"),
+                                                                builder: (context,
+                                                                    AsyncSnapshot<
+                                                                            String>
+                                                                        snapshot2) {
+                                                                  return (snapshot2
+                                                                          .hasData)
+                                                                      ? Image
+                                                                          .network(
+                                                                          snapshot2
+                                                                              .data!,
+                                                                          fit: BoxFit
+                                                                              .contain,
+                                                                        )
+                                                                      : Container();
+                                                                }),
+                                                          ),
+                                                          Container(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .cardColor,
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.35,
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.58,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceAround,
+                                                              children: [
+                                                                Container(
+                                                                  margin:
+                                                                      const EdgeInsets
+                                                                          .only(
+                                                                          top:
+                                                                              5,
+                                                                          bottom:
+                                                                              5),
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.35,
+                                                                  child: Column(
                                                                     children: [
-                                                                      IconButton(
-                                                                          onPressed:
-                                                                              () async {
-                                                                            adminsrv.deleteData(context,
-                                                                                dat);
-                                                                            Storage().deleteImage("product/${dat.id}.${dat.ekstensi}");
-                                                                            dataclothes.delete(dat.id);
-                                                                          },
-                                                                          icon:
-                                                                              const Icon(
-                                                                            CupertinoIcons.trash,
-                                                                            size:
-                                                                                35,
-                                                                          )),
-                                                                      IconButton(
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.of(context).push(MaterialPageRoute(
-                                                                                builder: (context) => EditScreen(
-                                                                                      prod: Product(id: dat.id, harga: dat.harga, desc: dat.desc, ekstensi: dat.ekstensi, kategori: dat.kategori),
-                                                                                    )));
-                                                                          },
-                                                                          icon: const Icon(
-                                                                              CupertinoIcons.pen,
-                                                                              size: 35)),
+                                                                      texts_2(
+                                                                          context,
+                                                                          "Rp. ${dat.harga}",
+                                                                          16,
+                                                                          TextAlign
+                                                                              .start,
+                                                                          FontWeight
+                                                                              .bold), //harga
+                                                                      texts_2(
+                                                                          context,
+                                                                          snapshot
+                                                                              .data![
+                                                                                  index]
+                                                                              .desc,
+                                                                          13,
+                                                                          TextAlign
+                                                                              .start,
+                                                                          FontWeight
+                                                                              .normal)
                                                                     ],
-                                                                  )
-                                                                ],
-                                                              ),
+                                                                  ),
+                                                                ), //keterangan
+                                                                Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceEvenly,
+                                                                  children: [
+                                                                    IconButton(
+                                                                        onPressed:
+                                                                            () async {
+                                                                          adminsrv.deleteData(
+                                                                              context,
+                                                                              dat);
+                                                                          Storage()
+                                                                              .deleteImage("product/${dat.kategori}/${dat.id}.${dat.ekstensi}");
+                                                                          dataclothes
+                                                                              .delete([
+                                                                            dat.id,
+                                                                            dat.kategori
+                                                                          ]);
+                                                                        },
+                                                                        icon:
+                                                                            const Icon(
+                                                                          CupertinoIcons
+                                                                              .trash,
+                                                                          size:
+                                                                              35,
+                                                                        )),
+                                                                    IconButton(
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.of(context)
+                                                                              .push(MaterialPageRoute(
+                                                                                  builder: (context) => EditScreen(
+                                                                                        prod: Product(id: dat.id, harga: dat.harga, desc: dat.desc, ekstensi: dat.ekstensi, kategori: dat.kategori),
+                                                                                      )))
+                                                                              .then((value) => categoryclothes.changecategory(categoryclothes.getCategory));
+                                                                        },
+                                                                        icon: const Icon(
+                                                                            CupertinoIcons
+                                                                                .pen,
+                                                                            size:
+                                                                                35)),
+                                                                  ],
+                                                                )
+                                                              ],
                                                             ),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    })
-                                                : const Text("");
-                                          } else {
-                                            return SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.9,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.2,
-                                                child: const Center(
-                                                    child:
-                                                        CircularProgressIndicator()));
-                                          }
-                                        },
-                                      ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  })
+                                              : Container(
+                                                  margin: EdgeInsets.only(
+                                                    top: MediaQuery.of(context)
+                                                            .size
+                                                            .height *
+                                                        0.03,
+                                                    left: MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.05,
+                                                  ),
+                                                  child: texts_2(
+                                                    context,
+                                                    "Tidak Ada Produk",
+                                                    18,
+                                                    TextAlign.left,
+                                                    FontWeight.normal,
+                                                  ));
+                                        } else {
+                                          return SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.9,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.2,
+                                              child: const Center(
+                                                  child:
+                                                      CircularProgressIndicator()));
+                                        }
+                                      },
                                     ),
-                                  ],
-                                )
-                              : const Text("Tidak Ada Produk");
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      },
-                    );
-                  });
+                                  ),
+                                ]);
+                          } else {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        },
+                      );
+                    });
+              });
             })));
   }
 
@@ -304,9 +394,11 @@ class home_admin extends StatelessWidget {
             ),
             floatingActionButton: FloatingActionButton(
               backgroundColor: Theme.of(context).cardColor,
-              onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const AddScreen()));
+              onPressed: () async {
+                await Navigator.of(context)
+                    .push(MaterialPageRoute(
+                        builder: (context) => const AddScreen()))
+                    .then((_) => changePage.change(changePage.selects));
               },
               child: Icon(
                 CupertinoIcons.add_circled,

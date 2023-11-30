@@ -94,7 +94,11 @@ class IntroductionPage extends StatelessWidget {
                 showNextButton: true,
                 showSkipButton: true,
                 skip: texts(context, "Lewati", 16, TextAlign.start),
-                next: texts(context, "Selanjutnya", 16, TextAlign.start),
+                next: Icon(
+                  Icons.arrow_forward_rounded,
+                  size: 30,
+                  color: Theme.of(context).hintColor,
+                ),
                 done: texts(context, "Selesai", 16, TextAlign.start),
                 onSkip: () {
                   Navigator.of(context).pop();

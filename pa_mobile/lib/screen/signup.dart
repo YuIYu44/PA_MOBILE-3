@@ -63,7 +63,7 @@ class _signup extends State<signup> {
                                     top: MediaQuery.sizeOf(context).height *
                                         0.03),
                                 child: texts(
-                                    context, error_.notif, 14, TextAlign.left)),
+                                    context, error_.notif, 12, TextAlign.left)),
                             button(context, 'Sign Up', 0.05, 0, 0.35, () async {
                               String signup = await Auth().signUp(
                                   emailController.value.text,

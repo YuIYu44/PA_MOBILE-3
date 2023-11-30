@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
 class fav_clothes extends ChangeNotifier {
-  List<String> clothes = [];
-  List<String> get favorite => clothes;
+  Map<dynamic, dynamic> clothes = {};
+  Map<dynamic, dynamic> get favorite => clothes;
   add(clothes_) {
-    clothes = clothes_.map<String>((item) => item.toString()).toList();
+    clothes = clothes_;
   }
 
   delete(id) {
-    clothes.removeWhere((element) => element == id);
+    clothes.removeWhere((key, value) => key == id);
     notifyListeners();
   }
 
   deleteproduct(id) {
-    clothes.removeWhere((element) => element == id);
+    clothes..removeWhere((key, value) => key == id);
   }
 }

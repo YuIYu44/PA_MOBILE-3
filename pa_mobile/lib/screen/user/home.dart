@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pa_mobile/model/product.dart';
 import 'package:pa_mobile/provider/change_page.dart';
 import 'package:pa_mobile/provider/change_theme.dart';
 import 'package:pa_mobile/provider/fav_clothes.dart';
@@ -101,24 +102,31 @@ class home extends StatelessWidget {
             create: (context) => fav_clothes(),
             child: Consumer<fav_clothes>(builder: (context, data, __) {
               return FutureBuilder(
-                  future: data.add([""]),
+                  future: data.add({}),
                   builder: (BuildContext context, snapshot) {
                     return FutureBuilder(
                       future: userservice().favoriteContent(),
                       builder: (BuildContext context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
-                          data.add(snapshot.data);
+                          data.add(snapshot.data[0]);
                           return (snapshot.hasData)
                               ? ListView.builder(
                                   itemCount: data.favorite.length,
                                   itemBuilder: (context, index) {
-                                    String productId = data.favorite[index];
+                                    String key =
+                                        data.favorite.keys.elementAt(index);
+                                    final productId = data.favorite[key];
+
                                     return Padding(
                                       padding: const EdgeInsets.only(top: 20),
                                       child: FutureBuilder(
                                         future: adminServices()
-                                            .retrievecertainProduct(productId),
+                                            .retrievecertainProduct(
+                                                productId, key),
                                         builder: (context, productSnapshot) {
+                                          print("key $key");
+                                          print("productid $productId");
+                                          print("dddd ${productSnapshot.data}");
                                           if (productSnapshot.connectionState ==
                                               ConnectionState.waiting) {
                                             return const Center(
@@ -130,7 +138,7 @@ class home extends StatelessWidget {
                                           } else if (!productSnapshot.hasData ||
                                               !productSnapshot.data!.exists) {
                                             userservice()
-                                                .deletefavorite(productId);
+                                                .deletefavorite(productId, key);
                                             data.deleteproduct(productId);
                                             return Text("");
                                           } else {
@@ -147,7 +155,7 @@ class home extends StatelessWidget {
                                                       0.35,
                                                   child: FutureBuilder(
                                                     future: Storage().getImage(
-                                                        "product/$productId.${productSnapshot.data!.get('ekstensi')}"),
+                                                        "product/${productSnapshot.data!.get('kategori')}/$productId.${productSnapshot.data!.get('ekstensi')}"),
                                                     builder:
                                                         (context, snapshot2) {
                                                       return (snapshot2
@@ -222,7 +230,10 @@ class home extends StatelessWidget {
                                                                 () async {
                                                               await userservice()
                                                                   .deletefavorite(
-                                                                      productId);
+                                                                      productId,
+                                                                      data.favorite[
+                                                                              index]
+                                                                          [1]);
                                                               data.delete(
                                                                   productId);
                                                             },
@@ -329,7 +340,39 @@ class home extends StatelessWidget {
                                     changepass(snapshot.data.id)));
                           }),
                           button(context, "Log Out", 0.02, 0, 0.7, () async {
-                            FirebaseAuth.instance.signOut();
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: texts_2(context, "Konfirmasi Logout",
+                                      20, TextAlign.start, FontWeight.normal),
+                                  content: texts_2(
+                                      context,
+                                      "Apakah Anda Yakin Ingin Logout ?",
+                                      16,
+                                      TextAlign.start,
+                                      FontWeight.normal),
+                                  backgroundColor: Theme.of(context).cardColor,
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: texts_2(context, "Batal", 16,
+                                          TextAlign.start, FontWeight.normal),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        FirebaseAuth.instance.signOut();
+                                        Navigator.pop(context);
+                                      },
+                                      child: texts_2(context, "Logout", 16,
+                                          TextAlign.start, FontWeight.normal),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           })
                         ],
                       );

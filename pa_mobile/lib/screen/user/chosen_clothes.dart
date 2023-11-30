@@ -3,8 +3,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pa_mobile/model/product.dart';
 import 'package:pa_mobile/provider/Love_Clothes.dart';
 import 'package:pa_mobile/screen/widget.dart';
+import 'package:pa_mobile/services/admin_service.dart';
 import 'package:pa_mobile/services/storage.dart';
 import 'package:pa_mobile/services/user_service.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +54,7 @@ class chosenClothes extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 20, top: 10),
                   child: texts_2(
                     context,
-                    kind,
+                    kind.toUpperCase(),
                     25,
                     TextAlign.left,
                     FontWeight.bold,
@@ -65,8 +67,7 @@ class chosenClothes extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.75,
                   width: MediaQuery.of(context).size.width,
                   child: FutureBuilder(
-                    future:
-                        FirebaseFirestore.instance.collection("product").get(),
+                    future: adminServices().retrieveProduct(kind),
                     builder: (BuildContext context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
@@ -76,29 +77,18 @@ class chosenClothes extends StatelessWidget {
                         return Text("Error: ${snapshot.error}");
                       }
 
-                      // Memilih kategori
-                      String selectedCategory = kind.toLowerCase();
-
-                      // Filter produk berdasarkan kategori dan item yang dipilih
-                      var filteredProducts = snapshot.data!.docs
-                          .where((doc) =>
-                              doc.get('kategori').toString().toLowerCase() ==
-                              selectedCategory.toLowerCase())
-                          .toList();
-
-                      return (filteredProducts.isNotEmpty)
+                      return (snapshot.data!.isNotEmpty)
                           ? ChangeNotifierProvider<loveClothes>(
                               create: (_) => loveClothes(
                                   Theme.of(context).scaffoldBackgroundColor,
-                                  filteredProducts.length),
+                                  snapshot.data!.length),
                               child: Consumer<loveClothes>(
                                   builder: (_, data, __) => ListView.builder(
-                                      itemCount: filteredProducts.length,
+                                      itemCount: snapshot.data!.length,
                                       itemBuilder: (context, index) {
+                                        Product data = snapshot.data![index];
                                         return buildProductCard(
-                                            filteredProducts[index],
-                                            context,
-                                            index);
+                                            data, context, index);
                                       })))
                           : const Text("Produk yang anda pilih tidak ada");
                     },
@@ -112,8 +102,7 @@ class chosenClothes extends StatelessWidget {
     );
   }
 
-  Widget buildProductCard(
-      DocumentSnapshot product, BuildContext context, int index) {
+  Widget buildProductCard(Product product, BuildContext context, int index) {
     var loveClothesProvider = Provider.of<loveClothes>(context, listen: false);
     return Padding(
         padding: const EdgeInsets.only(top: 10),
@@ -122,8 +111,8 @@ class chosenClothes extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.35,
             height: MediaQuery.of(context).size.width * 0.35,
             child: FutureBuilder<String>(
-              future: Storage()
-                  .getImage("product/${product.id}.${product.get('ekstensi')}"),
+              future: Storage().getImage(
+                  "product/${product.kategori}/${product.id}.${product.ekstensi}"),
               builder: (context, snapshot2) {
                 return (snapshot2.hasData &&
                         snapshot2.connectionState == ConnectionState.done)
@@ -151,7 +140,7 @@ class chosenClothes extends StatelessWidget {
                               margin: const EdgeInsets.only(top: 10, bottom: 5),
                               child: texts_2(
                                 context,
-                                "Rp. ${product.get('harga')}",
+                                "Rp. ${product.harga}",
                                 18,
                                 TextAlign.start,
                                 FontWeight.w900,
@@ -160,7 +149,7 @@ class chosenClothes extends StatelessWidget {
                               margin: const EdgeInsets.only(bottom: 5),
                               child: texts_2(
                                 context,
-                                product.get('deskripsi'),
+                                product.desc,
                                 14,
                                 TextAlign.start,
                                 FontWeight.w600,
@@ -197,8 +186,9 @@ class chosenClothes extends StatelessWidget {
                                             if (loveClothesProvider
                                                     .color(index) !=
                                                 Colors.red) {
-                                              userservice()
-                                                  .addfavorite(product.id);
+                                              userservice().addfavorite(
+                                                  product.id!,
+                                                  product.kategori);
                                               showAlertDialog(
                                                   context,
                                                   "Pemberitahuan",

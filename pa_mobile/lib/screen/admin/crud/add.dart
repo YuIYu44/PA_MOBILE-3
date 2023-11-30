@@ -59,7 +59,7 @@ class _AddScreenState extends State<AddScreen> {
                   child: IconButton(
                     icon: const Icon(CupertinoIcons.back, size: 35),
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.of(context).pop(0);
                     },
                   ),
                 ),
@@ -83,7 +83,6 @@ class _AddScreenState extends State<AddScreen> {
                       onTap: () async {
                         final image = await _picker.pickImage(
                             source: ImageSource.gallery);
-
                         setState(() {
                           _img = image;
                         });
@@ -155,9 +154,11 @@ class _AddScreenState extends State<AddScreen> {
                         ekstensi: _img!.path.split(".").last,
                         kategori: selectedCategory!);
                     adminServices().addData(context, _img!, newProd);
-                    hargaController.clear();
-                    descController.clear();
-                    _img = null;
+                    setState(() {
+                      hargaController.clear();
+                      descController.clear();
+                      _img = null;
+                    });
                   }),
                 )
               ],

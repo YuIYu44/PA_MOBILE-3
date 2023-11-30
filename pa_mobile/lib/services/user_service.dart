@@ -15,11 +15,13 @@ class userservice {
     return await _userCollection.doc(email).get();
   }
 
-  Future addfavorite(String productId) async {
+  Future addfavorite(String productId, kategori) async {
     String email = (await uservalue()).id;
     DocumentReference docRef = await _userCollection.doc(email);
     await docRef.update({
-      'Favorite': FieldValue.arrayUnion([productId])
+      'Favorite': FieldValue.arrayUnion([
+        {productId: kategori}
+      ])
     });
   }
 
@@ -33,14 +35,14 @@ class userservice {
     return null;
   }
 
-  Future deletefavorite(String productId) async {
+  Future deletefavorite(String productId, String kategori) async {
     String email = (await uservalue()).id;
     var dcs =
         (await _userCollection.doc(email).get()).data() as Map<String, dynamic>;
     DocumentReference docRef = await _userCollection.doc(email);
     if (dcs.containsKey("Favorite")) {
       docRef.update({
-        'Favorite': FieldValue.arrayRemove([productId])
+        'Favorite': FieldValue.arrayRemove([productId, kategori])
       });
     }
   }

@@ -60,7 +60,7 @@ class _login extends State<login> {
                             margin: EdgeInsets.only(
                                 top: MediaQuery.sizeOf(context).height * 0.03),
                             child: texts(
-                                context, error_.notif, 14, TextAlign.left)),
+                                context, error_.notif, 12, TextAlign.left)),
                         button(context, 'Sign In', 0.05, 0, 0.35, () async {
                           String login = await Auth().login(
                               emailController.value.text,
