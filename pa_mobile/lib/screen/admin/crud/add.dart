@@ -79,6 +79,9 @@ class _AddScreenState extends State<AddScreen> {
                                 ? DecorationImage(
                                     image: FileImage(File(_img!.path)))
                                 : null),
+                        child: (_img == null)
+                            ? const Icon(Icons.add_a_photo_outlined, size: 50)
+                            : null,
                       ),
                       onTap: () async {
                         final image = await _picker.pickImage(

@@ -373,7 +373,7 @@ class home_admin extends StatelessWidget {
                               Navigator.pop(context);
                             },
                             child: texts_2(context, "Batal", 16,
-                                TextAlign.start, FontWeight.normal),
+                                TextAlign.start, FontWeight.bold),
                           ),
                           TextButton(
                             onPressed: () async {
@@ -381,7 +381,7 @@ class home_admin extends StatelessWidget {
                               Navigator.pop(context);
                             },
                             child: texts_2(context, "Logout", 16,
-                                TextAlign.start, FontWeight.normal),
+                                TextAlign.start, FontWeight.bold),
                           ),
                         ],
                       );
