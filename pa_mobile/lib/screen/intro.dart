@@ -22,7 +22,7 @@ class IntroductionPage extends StatelessWidget {
                   PageViewModel(
                     title: "Selamat Datang di Toko 3Thrift",
                     decoration: PageDecoration(
-                      pageColor: Theme.of(context).highlightColor,
+                      pageColor: Theme.of(context).scaffoldBackgroundColor,
                       imagePadding: const EdgeInsets.only(top: 130),
                       titleTextStyle: TextStyle(
                           color: Theme.of(context).hintColor, fontSize: 25),
@@ -49,7 +49,7 @@ class IntroductionPage extends StatelessWidget {
                   PageViewModel(
                     title: "Cari Barang Favorit Anda",
                     decoration: PageDecoration(
-                      pageColor: Theme.of(context).highlightColor,
+                      pageColor: Theme.of(context).scaffoldBackgroundColor,
                       imagePadding: const EdgeInsets.only(top: 130),
                       titleTextStyle: TextStyle(
                           color: Theme.of(context).hintColor, fontSize: 25),
@@ -75,7 +75,7 @@ class IntroductionPage extends StatelessWidget {
                   PageViewModel(
                     title: "Beli dan Hemat",
                     decoration: PageDecoration(
-                      pageColor: Theme.of(context).highlightColor,
+                      pageColor: Theme.of(context).scaffoldBackgroundColor,
                       imagePadding: const EdgeInsets.only(top: 130),
                       titleTextStyle: TextStyle(
                           color: Theme.of(context).hintColor, fontSize: 25),
@@ -108,12 +108,6 @@ class IntroductionPage extends StatelessWidget {
                   size: 30,
                   color: Theme.of(context).hintColor,
                 ),
-                // next: texts(context, "Selanjutnya", 16, TextAlign.start),
-                // next: Icon(
-                //   Icons.arrow_forward_rounded,
-                //   size: 30,
-                //   color: Theme.of(context).hintColor,
-                // ),
                 done: texts(context, "Selesai", 16, TextAlign.start),
                 onSkip: () {
                   Navigator.of(context).pop();
@@ -138,7 +132,7 @@ class IntroductionPage extends StatelessWidget {
               );
             } else {
               return Container(
-                color: ThemeData().scaffoldBackgroundColor,
+                color: Theme.of(context).scaffoldBackgroundColor,
               );
             }
           }

@@ -13,6 +13,13 @@ Widget texts(context, texts, fontsizes, textsalign) {
   );
 }
 
+Widget snackbar(context, text, color, duration) {
+  return SnackBar(
+      content: texts_2(context, text, 14, TextAlign.left, FontWeight.bold),
+      backgroundColor: color,
+      duration: Duration(seconds: duration));
+}
+
 Widget texts_2(context, texts, fontsizes, textsalign, weight) {
   return Text(texts,
       textAlign: textsalign,
@@ -212,8 +219,7 @@ Widget category(context, Category) {
                                               chosenClothes(Category[
                                                       Category.keys.elementAt(
                                                           index)]![index2]
-                                                  .toString()
-                                                  )));
+                                                  .toString())));
                                 },
                                 child: texts_2(
                                     context,

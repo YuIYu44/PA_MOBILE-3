@@ -27,12 +27,11 @@ class _login extends State<login> {
                 body: SingleChildScrollView(
                     child: Stack(children: [
               Container(
-                color: Theme.of(context).cardColor,
                 height: MediaQuery.of(context).size.height * 0.8,
                 width: MediaQuery.of(context).size.width * 0.8,
                 margin: EdgeInsets.fromLTRB(
                     MediaQuery.of(context).size.width * 0.1,
-                    MediaQuery.of(context).size.height * 0.115,
+                    MediaQuery.of(context).size.height * 0.05,
                     0,
                     0),
                 child: Center(child: Consumer<error>(
@@ -60,13 +59,13 @@ class _login extends State<login> {
                             margin: EdgeInsets.only(
                                 top: MediaQuery.sizeOf(context).height * 0.03),
                             child: texts(
-                                context, error_.notif, 12, TextAlign.left)),
+                                context, error_.notif, 14, TextAlign.left)),
                         button(context, 'Sign In', 0.05, 0, 0.35, () async {
                           String login = await Auth().login(
                               emailController.value.text,
                               passwordController.value.text);
                           await error_.change(login);
-
+                          await Future.delayed(const Duration(seconds: 1));
                           if (login == "") {
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
@@ -74,25 +73,25 @@ class _login extends State<login> {
                                 (Route<dynamic> route) => false);
                           }
                         }),
-                        Container(
-                          margin: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.height * 0.15),
-                          child: GestureDetector(
-                              onTap: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            signup()));
-                              },
-                              child: texts(context, "Don't have account yet?",
-                                  15, TextAlign.left)),
-                        ),
                       ],
                     );
                   },
                 )),
-              )
+              ),
+              Center(
+                  child: Container(
+                margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.93),
+                child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => signup()));
+                    },
+                    child: texts(context, "Don't have account yet?", 15,
+                        TextAlign.left)),
+              )),
             ])))));
   }
 }

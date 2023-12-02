@@ -48,8 +48,10 @@ class adminServices {
             'product/${product.kategori}/${newProduct.id}.${pic.path.split(".").last}')
         .putFile(File(pic.path))
         .then((value1) {
-      showAlertDialog(context, "Pemberitahuan", "Produk Berhasil Ditambahkan",
-          exit: false);
+      final snackBar =
+          snackbar(context, "Produk Berhasil Ditambahkan", Colors.green, 2)
+              as SnackBar;
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
   }
 
@@ -59,25 +61,13 @@ class adminServices {
         .collection(product.kategori)
         .doc(product.id)
         .update(product.toMap())
-        .then((value1) {
-      showDialog(
-        context: contexts,
-        builder: (BuildContext context_) {
-          return AlertDialog(
-            title: Text("Pemberitahuan"),
-            content: Text("Produk Berhasil Diubah"),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(contexts).pop();
-                  Navigator.of(context_).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+        .then((value1) async {
+      final snackBar =
+          snackbar(contexts, "Produk Berhasil Diubah", Colors.green, 1)
+              as SnackBar;
+      ScaffoldMessenger.of(contexts).showSnackBar(snackBar);
+      await Future.delayed(const Duration(seconds: 2));
+      Navigator.of(contexts).pop();
     });
     if (pic != null) {
       await FirebaseStorage.instance

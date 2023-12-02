@@ -48,9 +48,12 @@ class chosenClothes extends StatelessWidget {
               Positioned(
                 top: MediaQuery.sizeOf(context).height * 0.07,
                 child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    color: Theme.of(context).cardColor,
+                  ),
                   width: MediaQuery.sizeOf(context).width * 0.94,
-                  height: 50,
-                  color: Theme.of(context).cardColor,
+                  height: 55,
                   padding: const EdgeInsets.only(left: 20, top: 10),
                   child: texts_2(
                     context,
@@ -90,7 +93,9 @@ class chosenClothes extends StatelessWidget {
                                         return buildProductCard(
                                             data, context, index);
                                       })))
-                          : const Text("Produk yang anda pilih tidak ada");
+                          : Center(
+                              child: texts_2(context, "Produk Tidak Tersedia",
+                                  15, TextAlign.center, FontWeight.bold));
                     },
                   ),
                 ),
@@ -125,9 +130,14 @@ class chosenClothes extends StatelessWidget {
             ),
           ),
           Container(
-              color: Theme.of(context).cardColor,
               height: MediaQuery.of(context).size.width * 0.35,
               width: MediaQuery.of(context).size.width * 0.58,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    bottomRight: Radius.circular(10)),
+                color: Theme.of(context).cardColor,
+              ),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -172,8 +182,8 @@ class chosenClothes extends StatelessWidget {
                                     if (productSnapshot.connectionState ==
                                         ConnectionState.done) {
                                       if (favoriteSnapshot.data != null) {
-                                        if (favoriteSnapshot.data
-                                            .contains(product.id)) {
+                                        if ((favoriteSnapshot.data.toString())
+                                            .contains(product.id.toString())) {
                                           loveClothesProvider.atfavorite(
                                               index, Colors.red);
                                         }
@@ -189,19 +199,24 @@ class chosenClothes extends StatelessWidget {
                                               userservice().addfavorite(
                                                   product.id!,
                                                   product.kategori);
-                                              showAlertDialog(
+                                              var snackbar_ = snackbar(
                                                   context,
-                                                  "Pemberitahuan",
-                                                  "Produk Favorit Berhasil Ditambahkan",
-                                                  exit: false);
+                                                  "Produk Favorite Berhasil Ditambahkan",
+                                                  Colors.green,
+                                                  2) as SnackBar;
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackbar_);
+
                                               loveClothesProvider.changelove(
                                                   index, Colors.red);
                                             } else {
-                                              showAlertDialog(
+                                              var snackbar_ = snackbar(
                                                   context,
-                                                  "Pemberitahuan",
-                                                  "Produk sudah ada di favorit",
-                                                  exit: false);
+                                                  "Produk sudah ada di favorite",
+                                                  Colors.red,
+                                                  2) as SnackBar;
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackbar_);
                                             }
                                           },
                                           icon: Icon(CupertinoIcons.heart_fill,

@@ -28,7 +28,7 @@ class Auth {
       return "Fill all of the fields";
     } catch (e) {
       if (e is FirebaseAuthException) {
-        return e.toString().toUpperCase().split("]")[1];
+        return e.toString().split("]")[1];
       }
       return "Error Is Found";
     }
@@ -48,10 +48,21 @@ class Auth {
       }
       return "Fill all of the fields";
     } catch (e) {
-      if (e is FirebaseAuthException) {
-        return e.toString().toUpperCase().split("]")[1];
+      if (e
+          .toString()
+          .toUpperCase()
+          .split("]")[1]
+          .contains("UNABLE TO ESTABLISH")) {
+        return "Fill all the fields Or Check your connection";
       }
-      return "Error Is Found";
+      if (e
+          .toString()
+          .toUpperCase()
+          .split("]")[1]
+          .contains("A NETWORK ERROR")) {
+        return "Check Your Connection";
+      }
+      return "Wrong email/password";
     }
   }
 
@@ -73,6 +84,13 @@ class Auth {
       }
       return "Password contains at least 6 characters\nAnd different from old password ";
     } catch (e) {
+      if (e
+          .toString()
+          .toUpperCase()
+          .split("]")[1]
+          .contains("A NETWORK ERROR")) {
+        return "Check Your Connection";
+      }
       return "Wrong Old Password";
     }
   }

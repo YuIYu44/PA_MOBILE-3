@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pa_mobile/model/product.dart';
 import 'package:pa_mobile/provider/dropdownbutton.dart';
-import 'package:pa_mobile/provider/fav_clothes.dart';
+import 'package:pa_mobile/provider/show_clothes.dart';
 import 'package:pa_mobile/screen/admin/crud/add.dart';
 import 'package:pa_mobile/screen/admin/crud/edit.dart';
 import 'package:pa_mobile/provider/change_page.dart';
@@ -25,15 +25,16 @@ class home_admin extends StatelessWidget {
         padding: customEdgeInsets(context, 0.03, 0),
         child: MultiProvider(
             providers: [
-              ChangeNotifierProvider<fav_clothes>(create: (_) => fav_clothes()),
+              ChangeNotifierProvider<show_clothes>(
+                  create: (_) => show_clothes()),
               ChangeNotifierProvider<categoryclothes>(
                   create: (_) => categoryclothes()),
             ],
-            child: Consumer<fav_clothes>(builder: (context, dataclothes, __) {
+            child: Consumer<show_clothes>(builder: (context, dataclothes, __) {
               return Consumer<categoryclothes>(
                   builder: (context, categoryclothes, __) {
                 return FutureBuilder(
-                    future: dataclothes.add([""]),
+                    future: dataclothes.add([]),
                     builder: (BuildContext context, snapshot) {
                       return FutureBuilder(
                         future: adminsrv
@@ -160,9 +161,6 @@ class home_admin extends StatelessWidget {
                                                                 }),
                                                           ),
                                                           Container(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .cardColor,
                                                             height: MediaQuery.of(
                                                                         context)
                                                                     .size
@@ -173,6 +171,20 @@ class home_admin extends StatelessWidget {
                                                                     .size
                                                                     .width *
                                                                 0.58,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius: const BorderRadius
+                                                                  .only(
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          10),
+                                                                  bottomRight: Radius
+                                                                      .circular(
+                                                                          10)),
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .cardColor,
+                                                            ),
                                                             child: Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
@@ -265,24 +277,14 @@ class home_admin extends StatelessWidget {
                                                       ),
                                                     );
                                                   })
-                                              : Container(
-                                                  margin: EdgeInsets.only(
-                                                    top: MediaQuery.of(context)
-                                                            .size
-                                                            .height *
-                                                        0.03,
-                                                    left: MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        0.05,
-                                                  ),
+                                              : Center(
                                                   child: texts_2(
-                                                    context,
-                                                    "Tidak Ada Produk",
-                                                    18,
-                                                    TextAlign.left,
-                                                    FontWeight.normal,
-                                                  ));
+                                                  context,
+                                                  "Tidak Ada Produk",
+                                                  15,
+                                                  TextAlign.center,
+                                                  FontWeight.bold,
+                                                ));
                                         } else {
                                           return SizedBox(
                                               width: MediaQuery.of(context)

@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pa_mobile/model/product.dart';
 import 'package:pa_mobile/provider/change_page.dart';
 import 'package:pa_mobile/provider/change_theme.dart';
 import 'package:pa_mobile/provider/fav_clothes.dart';
@@ -102,161 +101,174 @@ class home extends StatelessWidget {
             create: (context) => fav_clothes(),
             child: Consumer<fav_clothes>(builder: (context, data, __) {
               return FutureBuilder(
-                  future: data.add({}),
+                  future: data.add([
+                    {"kk": "kk"}
+                  ]),
                   builder: (BuildContext context, snapshot) {
                     return FutureBuilder(
                       future: userservice().favoriteContent(),
                       builder: (BuildContext context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
-                          data.add(snapshot.data[0]);
-                          return (snapshot.hasData)
-                              ? ListView.builder(
-                                  itemCount: data.favorite.length,
-                                  itemBuilder: (context, index) {
-                                    String key =
-                                        data.favorite.keys.elementAt(index);
-                                    final productId = data.favorite[key];
+                          if (snapshot.hasData && snapshot.data.length > 0) {
+                            data.add(snapshot.data);
+                            return ListView.builder(
+                              itemCount: data.favorite.length,
+                              itemBuilder: (context, index) {
+                                String productId =
+                                    data.favorite[index].keys.first;
+                                final key = data.favorite[index][productId];
 
-                                    return Padding(
-                                      padding: const EdgeInsets.only(top: 20),
-                                      child: FutureBuilder(
-                                        future: adminServices()
-                                            .retrievecertainProduct(
-                                                productId, key),
-                                        builder: (context, productSnapshot) {
-                                          print("key $key");
-                                          print("productid $productId");
-                                          print("dddd ${productSnapshot.data}");
-                                          if (productSnapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return const Center(
-                                                child:
-                                                    CircularProgressIndicator());
-                                          } else if (productSnapshot.hasError) {
-                                            return Text(
-                                                'Error: ${productSnapshot.error}');
-                                          } else if (!productSnapshot.hasData ||
-                                              !productSnapshot.data!.exists) {
-                                            userservice()
-                                                .deletefavorite(productId, key);
-                                            data.deleteproduct(productId);
-                                            return Text("");
-                                          } else {
-                                            return Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.35,
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.35,
-                                                  child: FutureBuilder(
-                                                    future: Storage().getImage(
-                                                        "product/${productSnapshot.data!.get('kategori')}/$productId.${productSnapshot.data!.get('ekstensi')}"),
-                                                    builder:
-                                                        (context, snapshot2) {
-                                                      return (snapshot2
-                                                                  .hasData &&
-                                                              snapshot2
-                                                                      .connectionState ==
-                                                                  ConnectionState
-                                                                      .done)
-                                                          ? Image.network(
-                                                              snapshot2.data!,
-                                                              fit: BoxFit
-                                                                  .contain,
-                                                            )
-                                                          : Container();
-                                                    },
-                                                  ),
-                                                ),
-                                                Container(
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 20),
+                                  child: FutureBuilder(
+                                    future: adminServices()
+                                        .retrievecertainProduct(productId, key),
+                                    builder: (context, productSnapshot) {
+                                      if (productSnapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                            child: CircularProgressIndicator());
+                                      } else if (productSnapshot.hasError) {
+                                        return Text(
+                                            'Error: ${productSnapshot.error}');
+                                      } else if (!productSnapshot.hasData ||
+                                          !productSnapshot.data!.exists) {
+                                        userservice()
+                                            .deletefavorite(productId, key);
+                                        data.deleteproduct(productId);
+                                        return Text("");
+                                      } else {
+                                        return Row(
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.35,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.35,
+                                              child: FutureBuilder(
+                                                future: Storage().getImage(
+                                                    "product/${productSnapshot.data!.get('kategori')}/$productId.${productSnapshot.data!.get('ekstensi')}"),
+                                                builder: (context, snapshot2) {
+                                                  return (snapshot2.hasData &&
+                                                          snapshot2
+                                                                  .connectionState ==
+                                                              ConnectionState
+                                                                  .done)
+                                                      ? Image.network(
+                                                          snapshot2.data!,
+                                                          fit: BoxFit.contain,
+                                                        )
+                                                      : Container();
+                                                },
+                                              ),
+                                            ),
+                                            Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.35,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.58,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(10)),
                                                   color: Theme.of(context)
-                                                      .cardColor,
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.35,
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.58,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    children: [
-                                                      Container(
-                                                        margin: const EdgeInsets
-                                                            .only(
+                                                      .cardColor),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
                                                             top: 5, bottom: 5),
-                                                        width: MediaQuery.of(
-                                                                    context)
+                                                    width:
+                                                        MediaQuery.of(context)
                                                                 .size
                                                                 .width *
                                                             0.35,
-                                                        child: Column(
-                                                          children: [
-                                                            texts_2(
-                                                                context,
-                                                                "Rp. ${productSnapshot.data!['harga']}",
-                                                                16,
-                                                                TextAlign.start,
-                                                                FontWeight
-                                                                    .bold),
-                                                            texts_2(
-                                                                context,
-                                                                productSnapshot
-                                                                    .data!
-                                                                    .get(
-                                                                        'deskripsi'),
-                                                                13,
-                                                                TextAlign.start,
-                                                                FontWeight
-                                                                    .normal)
-                                                          ],
+                                                    child: Column(
+                                                      children: [
+                                                        Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    top: 10,
+                                                                    bottom: 5),
+                                                            child: texts_2(
+                                                              context,
+                                                              "Rp. ${productSnapshot.data!['harga']}",
+                                                              18,
+                                                              TextAlign.start,
+                                                              FontWeight.w900,
+                                                            )),
+                                                        Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    bottom: 5),
+                                                            child: texts_2(
+                                                              context,
+                                                              productSnapshot
+                                                                  .data!
+                                                                  .get(
+                                                                      'deskripsi'),
+                                                              14,
+                                                              TextAlign.start,
+                                                              FontWeight.w600,
+                                                            )),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      IconButton(
+                                                        onPressed: () async {
+                                                          await userservice()
+                                                              .deletefavorite(
+                                                                  productId,
+                                                                  key);
+                                                          data.delete(
+                                                              productId);
+                                                        },
+                                                        icon: const Icon(
+                                                          CupertinoIcons.trash,
+                                                          size: 35,
                                                         ),
                                                       ),
-                                                      Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          IconButton(
-                                                            onPressed:
-                                                                () async {
-                                                              await userservice()
-                                                                  .deletefavorite(
-                                                                      productId,
-                                                                      data.favorite[
-                                                                              index]
-                                                                          [1]);
-                                                              data.delete(
-                                                                  productId);
-                                                            },
-                                                            icon: const Icon(
-                                                              CupertinoIcons
-                                                                  .trash,
-                                                              size: 35,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )
                                                     ],
-                                                  ),
-                                                ),
-                                              ],
-                                            );
-                                          }
-                                        },
-                                      ),
-                                    );
-                                  },
-                                )
-                              : const Text("Tidak Ada Produk Favorite");
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
+                            );
+                          } else {
+                            return Center(
+                                child: texts_2(
+                                    context,
+                                    "Tidak Ada Produk Favorite",
+                                    15,
+                                    TextAlign.center,
+                                    FontWeight.bold));
+                          }
                         } else {
                           return const Center(
                             child: CircularProgressIndicator(),

@@ -26,12 +26,11 @@ class _signup extends State<signup> {
                 body: SingleChildScrollView(
                     child: Stack(children: [
               Container(
-                  color: Theme.of(context).cardColor,
                   height: MediaQuery.of(context).size.height * 0.8,
                   width: MediaQuery.of(context).size.width * 0.8,
                   margin: EdgeInsets.fromLTRB(
                       MediaQuery.of(context).size.width * 0.1,
-                      MediaQuery.of(context).size.height * 0.115,
+                      MediaQuery.of(context).size.height * 0.05,
                       0,
                       0),
                   child: Center(
@@ -63,13 +62,14 @@ class _signup extends State<signup> {
                                     top: MediaQuery.sizeOf(context).height *
                                         0.03),
                                 child: texts(
-                                    context, error_.notif, 12, TextAlign.left)),
+                                    context, error_.notif, 14, TextAlign.left)),
                             button(context, 'Sign Up', 0.05, 0, 0.35, () async {
                               String signup = await Auth().signUp(
                                   emailController.value.text,
                                   passwordController.value.text,
                                   usernameController.value.text);
                               await error_.change(signup);
+                              await Future.delayed(const Duration(seconds: 1));
                               if (signup == "") {
                                 Navigator.pushReplacement(
                                     context,
@@ -78,29 +78,25 @@ class _signup extends State<signup> {
                                             login()));
                               }
                             }),
-                            Container(
-                              margin: EdgeInsets.only(
-                                  top: MediaQuery.of(context).size.height *
-                                      0.08),
-                              child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                login()));
-                                  },
-                                  child: texts(
-                                      context,
-                                      "I already have an account",
-                                      15,
-                                      TextAlign.left)),
-                            ),
                           ],
                         );
                       },
                     )),
-                  ))
+                  )),
+              Center(
+                  child: Container(
+                margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.93),
+                child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => login()));
+                    },
+                    child: texts(context, "I already have an account", 15,
+                        TextAlign.left)),
+              )),
             ])))));
   }
 }

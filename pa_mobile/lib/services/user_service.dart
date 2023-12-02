@@ -42,7 +42,9 @@ class userservice {
     DocumentReference docRef = await _userCollection.doc(email);
     if (dcs.containsKey("Favorite")) {
       docRef.update({
-        'Favorite': FieldValue.arrayRemove([productId, kategori])
+        'Favorite': FieldValue.arrayRemove([
+          {productId: kategori}
+        ])
       });
     }
   }

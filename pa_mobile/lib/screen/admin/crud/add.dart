@@ -72,9 +72,14 @@ class _AddScreenState extends State<AddScreen> {
                           right: MediaQuery.sizeOf(context).width * 0.04,
                         ),
                         width: MediaQuery.of(context).size.width * 0.47,
-                        height: MediaQuery.of(context).size.height * 0.3,
+                        height: MediaQuery.of(context).size.width * 0.6,
                         decoration: BoxDecoration(
-                            color: Theme.of(context).cardColor,
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            border: Border.all(
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge!.color!,
+                              style: BorderStyle.solid,
+                            ),
                             image: (_img != null)
                                 ? DecorationImage(
                                     image: FileImage(File(_img!.path)))
