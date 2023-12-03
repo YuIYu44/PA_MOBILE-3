@@ -20,17 +20,16 @@ class home_admin extends StatelessWidget {
   const home_admin({super.key});
 
   Widget home(BuildContext context) {
-    var adminsrv = adminServices();
+    var adminsrv = AdminServices();
     return Padding(
         padding: customEdgeInsets(context, 0.03, 0),
         child: MultiProvider(
             providers: [
-              ChangeNotifierProvider<show_clothes>(
-                  create: (_) => show_clothes()),
+              ChangeNotifierProvider<ShowClothes>(create: (_) => ShowClothes()),
               ChangeNotifierProvider<CategoryClothes>(
                   create: (_) => CategoryClothes()),
             ],
-            child: Consumer2<show_clothes, CategoryClothes>(
+            child: Consumer2<ShowClothes, CategoryClothes>(
                 builder: (context, dataclothes, categoryclothes, __) {
               return FutureBuilder(
                   future: dataclothes.add([]),
@@ -96,12 +95,14 @@ class home_admin extends StatelessWidget {
                                             ));
                                       }).toList(),
                                       onChanged: (String? value) {
+                                        ScaffoldMessenger.of(context)
+                                            .clearSnackBars();
                                         categoryclothes.changecategory(value!);
                                       },
                                     ))),
                                 Expanded(
                                   child: FutureBuilder(
-                                    future: adminServices().retrieveProduct(
+                                    future: AdminServices().retrieveProduct(
                                         categoryclothes.getCategory),
                                     builder: (BuildContext context, snapshot) {
                                       if (snapshot.connectionState ==
@@ -282,6 +283,16 @@ class home_admin extends StatelessWidget {
                                                                           dat.id,
                                                                           dat.kategori
                                                                         ]);
+                                                                        final snackBar = snackbar(
+                                                                            context,
+                                                                            "Produk Berhasil Dihapus",
+                                                                            Colors
+                                                                                .green,
+                                                                            2,
+                                                                            floating:
+                                                                                true) as SnackBar;
+                                                                        ScaffoldMessenger.of(context)
+                                                                            .showSnackBar(snackBar);
                                                                       }
                                                                     },
                                                                     icon:
@@ -419,6 +430,7 @@ class home_admin extends StatelessWidget {
                           TextButton(
                             onPressed: () async {
                               FirebaseAuth.instance.signOut();
+                              ScaffoldMessenger.of(context).clearSnackBars();
                               Navigator.pop(context);
                             },
                             child: texts_2(context, "Logout", 16,

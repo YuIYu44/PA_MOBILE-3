@@ -7,18 +7,19 @@ import 'package:provider/provider.dart';
 import 'signup.dart';
 import 'widget.dart';
 
-class login extends StatefulWidget {
-  State<login> createState() => _login();
+class Login extends StatefulWidget {
+  @override
+  State<Login> createState() => _Login();
 }
 
-class _login extends State<login> {
+class _Login extends State<Login> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   @override
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<error>(
-        create: (context) => error(),
+    return ChangeNotifierProvider<ErrorNote>(
+        create: (context) => ErrorNote(),
         child: WillPopScope(
             onWillPop: () {
               return Future.value(false);
@@ -34,7 +35,7 @@ class _login extends State<login> {
                     MediaQuery.of(context).size.height * 0.05,
                     0,
                     0),
-                child: Center(child: Consumer<error>(
+                child: Center(child: Consumer<ErrorNote>(
                   builder: (context, error_, child) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -44,7 +45,7 @@ class _login extends State<login> {
                           margin: EdgeInsets.only(
                               bottom:
                                   MediaQuery.of(context).size.height * 0.02),
-                          child: Icon(
+                          child: const Icon(
                             CupertinoIcons.person_crop_circle,
                             size: 120,
                           ),
@@ -69,7 +70,7 @@ class _login extends State<login> {
                           if (login == "") {
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
-                                    builder: (context) => MyApp()),
+                                    builder: (context) => const MyApp()),
                                 (Route<dynamic> route) => false);
                           }
                         }),
@@ -87,7 +88,7 @@ class _login extends State<login> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) => signup()));
+                              builder: (BuildContext context) => SignUp()));
                     },
                     child: texts(context, "Don't have account yet?", 15,
                         TextAlign.left)),

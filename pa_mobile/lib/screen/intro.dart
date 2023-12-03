@@ -114,7 +114,7 @@ class IntroductionPage extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
-                        return const welcome();
+                        return const Welcome();
                       },
                     ),
                   );
@@ -124,7 +124,7 @@ class IntroductionPage extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
-                        return const welcome();
+                        return const Welcome();
                       },
                     ),
                   );

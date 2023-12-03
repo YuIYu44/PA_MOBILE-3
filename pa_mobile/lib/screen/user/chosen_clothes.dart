@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pa_mobile/model/product.dart';
-import 'package:pa_mobile/provider/Love_Clothes.dart';
+import 'package:pa_mobile/provider/love_clothes.dart';
 import 'package:pa_mobile/screen/widget.dart';
 import 'package:pa_mobile/services/admin_service.dart';
 import 'package:pa_mobile/services/storage.dart';
@@ -41,6 +41,7 @@ class chosenClothes extends StatelessWidget {
                 child: IconButton(
                   icon: const Icon(CupertinoIcons.back, size: 35),
                   onPressed: () {
+                    ScaffoldMessenger.of(context).clearSnackBars();
                     Navigator.pop(context);
                   },
                 ),
@@ -70,7 +71,7 @@ class chosenClothes extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.75,
                   width: MediaQuery.of(context).size.width,
                   child: FutureBuilder(
-                    future: adminServices().retrieveProduct(kind),
+                    future: AdminServices().retrieveProduct(kind),
                     builder: (BuildContext context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
@@ -81,11 +82,11 @@ class chosenClothes extends StatelessWidget {
                       }
 
                       return (snapshot.data!.isNotEmpty)
-                          ? ChangeNotifierProvider<loveClothes>(
-                              create: (_) => loveClothes(
+                          ? ChangeNotifierProvider<LoveClothes>(
+                              create: (_) => LoveClothes(
                                   Theme.of(context).scaffoldBackgroundColor,
                                   snapshot.data!.length),
-                              child: Consumer<loveClothes>(
+                              child: Consumer<LoveClothes>(
                                   builder: (_, data, __) => ListView.builder(
                                       itemCount: snapshot.data!.length,
                                       itemBuilder: (context, index) {
@@ -108,7 +109,7 @@ class chosenClothes extends StatelessWidget {
   }
 
   Widget buildProductCard(Product product, BuildContext context, int index) {
-    var loveClothesProvider = Provider.of<loveClothes>(context, listen: false);
+    var loveClothesProvider = Provider.of<LoveClothes>(context, listen: false);
     return Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Row(children: [

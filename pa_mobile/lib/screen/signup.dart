@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pa_mobile/provider/error_notification.dart';
@@ -6,18 +8,19 @@ import 'package:provider/provider.dart';
 import 'login.dart';
 import 'widget.dart';
 
-class signup extends StatefulWidget {
-  State<signup> createState() => _signup();
+class SignUp extends StatefulWidget {
+  @override
+  State<SignUp> createState() => _SignUp();
 }
 
-class _signup extends State<signup> {
+class _SignUp extends State<SignUp> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<error>(
-        create: (context) => error(),
+    return ChangeNotifierProvider<ErrorNote>(
+        create: (context) => ErrorNote(),
         child: WillPopScope(
             onWillPop: () {
               return Future.value(false);
@@ -34,7 +37,7 @@ class _signup extends State<signup> {
                       0,
                       0),
                   child: Center(
-                    child: Center(child: Consumer<error>(
+                    child: Center(child: Consumer<ErrorNote>(
                       builder: (context, error_, child) {
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -44,7 +47,7 @@ class _signup extends State<signup> {
                               margin: EdgeInsets.only(
                                   bottom: MediaQuery.of(context).size.height *
                                       0.02),
-                              child: Icon(
+                              child: const Icon(
                                 CupertinoIcons.person_crop_circle_badge_plus,
                                 size: 120,
                               ),
@@ -75,7 +78,7 @@ class _signup extends State<signup> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>
-                                            login()));
+                                            Login()));
                               }
                             }),
                           ],
@@ -92,7 +95,7 @@ class _signup extends State<signup> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) => login()));
+                              builder: (BuildContext context) => Login()));
                     },
                     child: texts(context, "I already have an account", 15,
                         TextAlign.left)),

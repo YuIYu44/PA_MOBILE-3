@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pa_mobile/screen/login.dart';
 import 'widget.dart';
 
-class welcome extends StatelessWidget {
-  const welcome({super.key});
+class Welcome extends StatelessWidget {
+  const Welcome({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class welcome extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => login()));
+                          builder: (BuildContext context) => Login()));
                 }),
               ],
             ),

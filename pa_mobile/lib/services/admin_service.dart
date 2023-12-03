@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pa_mobile/model/product.dart';
 import '../screen/widget.dart';
 
-class adminServices {
+class AdminServices {
   CollectionReference productCol =
       FirebaseFirestore.instance.collection("product");
 
@@ -19,13 +19,13 @@ class adminServices {
   }
 
   Future<List<Product>> retrieveProduct(kind) async {
-    var collection_exist =
+    var collectionExist =
         await productCol.doc("products").collection(kind).limit(1).get();
     QuerySnapshot<Map<String, dynamic>> snapshot = await productCol
         .doc("products")
         .collection(kind)
         .get() as QuerySnapshot<Map<String, dynamic>>;
-    if (collection_exist.docs.isNotEmpty) {
+    if (collectionExist.docs.isNotEmpty) {
       return snapshot.docs
           .map((docSnapshot) => Product(
               id: docSnapshot.id,

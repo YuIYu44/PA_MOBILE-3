@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class show_clothes extends ChangeNotifier {
+class ShowClothes extends ChangeNotifier {
   List<String> clothes = [];
   List<String> get favorite => clothes;
 

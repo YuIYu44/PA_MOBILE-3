@@ -21,6 +21,7 @@ class _AddScreenState extends State<AddScreen> {
   final TextEditingController descController = TextEditingController();
   XFile? _img;
   final _picker = ImagePicker();
+  bool loading = false;
 
   String? selectedCategory;
 
@@ -59,8 +60,17 @@ class _AddScreenState extends State<AddScreen> {
                   child: IconButton(
                     icon: const Icon(CupertinoIcons.back, size: 35),
                     onPressed: () {
-                      Navigator.of(context).pop(0);
-                      ScaffoldMessenger.of(context).clearSnackBars();
+                      if (!loading) {
+                        Navigator.of(context).pop(0);
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                      } else {
+                        final snackBar = snackbar(
+                            context,
+                            "Mohon tunggu sebentar",
+                            Colors.orangeAccent,
+                            2) as SnackBar;
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
                     },
                   ),
                 ),
@@ -175,7 +185,7 @@ class _AddScreenState extends State<AddScreen> {
                       return;
                     }
 
-                    if(hargaProd <= 0){
+                    if (hargaProd <= 0) {
                       final snackBar = snackbar(
                           context,
                           "Harga tidak boleh kurang dari atau sama dengan 0",
@@ -186,13 +196,17 @@ class _AddScreenState extends State<AddScreen> {
                     }
 
                     ScaffoldMessenger.of(context).clearSnackBars();
-                    
+
+                    loading = true;
+
                     Product newProd = Product(
                         harga: hargaProd,
                         desc: descController.text,
                         ekstensi: _img!.path.split(".").last,
                         kategori: selectedCategory!);
-                    adminServices().addData(context, _img!, newProd);
+                    AdminServices()
+                        .addData(context, _img!, newProd)
+                        .then((value) => loading = false);
                     setState(() {
                       hargaController.clear();
                       descController.clear();

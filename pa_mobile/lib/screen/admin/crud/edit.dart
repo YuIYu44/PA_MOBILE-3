@@ -9,7 +9,7 @@ import 'package:pa_mobile/services/admin_service.dart';
 import 'package:pa_mobile/services/storage.dart';
 
 class EditScreen extends StatefulWidget {
-  final prodservices = adminServices();
+  final prodservices = AdminServices();
   final Product prod;
   EditScreen({super.key, required this.prod});
 

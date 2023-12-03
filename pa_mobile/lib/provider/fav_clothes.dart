@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class fav_clothes extends ChangeNotifier {
+class FavClothes extends ChangeNotifier {
   List<Map<dynamic, dynamic>> clothes = [{}];
   List<Map<dynamic, dynamic>> get favorite => clothes;
   add(List clothes_) {

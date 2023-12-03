@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class loveClothes extends ChangeNotifier {
+class LoveClothes extends ChangeNotifier {
   List<Color>? love;
   Color clr = Colors.black;
   color(index) {
     return love![index];
   }
 
-  loveClothes(Color clr_, int list) {
+  LoveClothes(Color clr_, int list) {
     love = List.generate(list, (index) => clr_);
     clr = clr_;
   }

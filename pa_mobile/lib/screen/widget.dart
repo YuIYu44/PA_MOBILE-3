@@ -15,11 +15,12 @@ Widget texts(context, texts, fontsizes, textsalign) {
   );
 }
 
-Widget snackbar(context, text, color, duration) {
+Widget snackbar(context, text, color, duration, {bool? floating}) {
   return SnackBar(
       content: texts_2(context, text, 14, TextAlign.left, FontWeight.bold),
       backgroundColor: color,
-      duration: Duration(seconds: duration));
+      duration: Duration(seconds: duration),
+      behavior: floating != null ? SnackBarBehavior.floating : null);
 }
 
 Widget texts_2(context, texts, fontsizes, textsalign, weight) {

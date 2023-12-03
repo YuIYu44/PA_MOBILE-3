@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, camel_case_types
+// ignore_for_file: non_constant_identifier_names, camel_case_types, use_build_context_synchronously
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -101,9 +101,9 @@ class home extends StatelessWidget {
   Widget favorite(BuildContext context) {
     return Padding(
         padding: customEdgeInsets(context, 0.03, 0.02),
-        child: ChangeNotifierProvider<fav_clothes>(
-            create: (context) => fav_clothes(),
-            child: Consumer<fav_clothes>(builder: (context, data, __) {
+        child: ChangeNotifierProvider<FavClothes>(
+            create: (context) => FavClothes(),
+            child: Consumer<FavClothes>(builder: (context, data, __) {
               return FutureBuilder(
                   future: data.add([
                     {"kk": "kk"}
@@ -125,7 +125,7 @@ class home extends StatelessWidget {
                                 return Padding(
                                   padding: const EdgeInsets.only(top: 20),
                                   child: FutureBuilder(
-                                    future: adminServices()
+                                    future: AdminServices()
                                         .retrievecertainProduct(productId, key),
                                     builder: (context, productSnapshot) {
                                       if (productSnapshot.connectionState ==
@@ -364,7 +364,7 @@ class home extends StatelessWidget {
                           button(context, "Change Password", 0.08, 0, 0.7, () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) =>
-                                    changepass(snapshot.data.id)));
+                                    ChangePass(snapshot.data.id)));
                           }),
                           button(context, "Log Out", 0.02, 0, 0.7, () async {
                             showDialog(
@@ -432,6 +432,7 @@ class home extends StatelessWidget {
                 selectedItemColor: Theme.of(context).cardColor,
                 currentIndex: changePage.selects,
                 onTap: (index) {
+                  ScaffoldMessenger.of(context).clearSnackBars();
                   changePage.change(index);
                 },
                 showSelectedLabels: false,

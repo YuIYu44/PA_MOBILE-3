@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pa_mobile/provider/error_notification.dart';
@@ -5,21 +7,22 @@ import 'package:pa_mobile/screen/widget.dart';
 import 'package:pa_mobile/services/auth.dart';
 import 'package:provider/provider.dart';
 
-class changepass extends StatefulWidget {
+class ChangePass extends StatefulWidget {
   final email;
-  changepass(this.email);
-  State<changepass> createState() => _changepass(email);
+  const ChangePass(this.email);
+  @override
+  State<ChangePass> createState() => _ChangePass(email);
 }
 
-class _changepass extends State<changepass> {
+class _ChangePass extends State<ChangePass> {
   final email;
-  _changepass(this.email);
+  _ChangePass(this.email);
   final TextEditingController oldController = TextEditingController();
   final TextEditingController newController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<error>(
-        create: (context) => error(),
+    return ChangeNotifierProvider<ErrorNote>(
+        create: (context) => ErrorNote(),
         child: WillPopScope(
             onWillPop: () {
               return Future.value(false);
@@ -30,7 +33,7 @@ class _changepass extends State<changepass> {
                     child: Padding(
                         padding: customEdgeInsets(context, 0.03, 0),
                         child: Center(
-                          child: Consumer<error>(
+                          child: Consumer<ErrorNote>(
                               builder: (context, error_, child) {
                             return Column(children: [
                               Container(
@@ -59,14 +62,14 @@ class _changepass extends State<changepass> {
                                       TextAlign.left)),
                               button(context, 'Change Password', 0.05, 0, 0.65,
                                   () async {
-                                String error_notif = await Auth().changepass(
+                                String errorNotif = await Auth().changepass(
                                     email,
                                     oldController.value.text,
                                     newController.value.text);
-                                await error_.change(error_notif);
+                                await error_.change(errorNotif);
                                 await Future.delayed(
                                     const Duration(seconds: 1));
-                                if (error_notif == "") {
+                                if (errorNotif == "") {
                                   Navigator.pop(context);
                                 }
                               }),
