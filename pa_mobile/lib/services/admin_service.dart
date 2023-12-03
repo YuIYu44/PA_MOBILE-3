@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -61,21 +63,20 @@ class adminServices {
         .collection(product.kategori)
         .doc(product.id)
         .update(product.toMap())
-        .then((value1) async {
-      final snackBar =
-          snackbar(contexts, "Produk Berhasil Diubah", Colors.green, 1)
-              as SnackBar;
-      ScaffoldMessenger.of(contexts).showSnackBar(snackBar);
-      await Future.delayed(const Duration(seconds: 2));
-      Navigator.of(contexts).pop();
-    });
+        .then((value1) async {});
     if (pic != null) {
       await FirebaseStorage.instance
           .ref()
           .child(
-              'product/${product.kategori}"/${product.id}.${pic.path.split(".").last}')
+              'product/${product.kategori}/${product.id}.${pic.path.split(".").last}')
           .putFile(File(pic.path));
     }
+    final snackBar =
+        snackbar(contexts, "Produk Berhasil Diubah", Colors.green, 1)
+            as SnackBar;
+    ScaffoldMessenger.of(contexts).showSnackBar(snackBar);
+    await Future.delayed(const Duration(seconds: 2));
+    Navigator.of(contexts).pop();
   }
 
   deleteData(BuildContext context, Product product) async {

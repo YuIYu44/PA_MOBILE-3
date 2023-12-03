@@ -155,7 +155,12 @@ class _AddScreenState extends State<AddScreen> {
                   ],
                 ),
                 Container(
-                  child: button(context, "Add", 0.03, 0.2, 0.25, () async {
+                    child: button(context, "Add", 0.03, 0.2, 0.25, () async {
+                  if (hargaController.text != "" &&
+                      descController.text != "" &&
+                      selectedCategory != "" &&
+                      _img != null) {
+                        
                     Product newProd = Product(
                         harga: int.parse(hargaController.text),
                         desc: descController.text,
@@ -167,8 +172,11 @@ class _AddScreenState extends State<AddScreen> {
                       descController.clear();
                       _img = null;
                     });
-                  }),
-                )
+                  } else {
+                    final snackBar = snackbar(context, "Mohon isi semua data yang dibutuhkan", Colors.red, 2) as SnackBar;
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                }))
               ],
             ),
           ),

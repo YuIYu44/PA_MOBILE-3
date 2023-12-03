@@ -40,16 +40,16 @@ class MyApp extends StatelessWidget {
                     builder: (BuildContext context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.data["status"] == "admin") {
-                          return home_admin();
+                          return const home_admin();
                         } else if (snapshot.data["status"] == "user") {
                           return home();
                         }
                       }
-                      return Scaffold(
+                      return const Scaffold(
                           body: Center(child: CircularProgressIndicator()));
                     });
               }
-              return IntroductionPage();
+              return const IntroductionPage();
             }));
   }
 }
