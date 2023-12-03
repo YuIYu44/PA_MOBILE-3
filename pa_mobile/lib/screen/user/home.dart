@@ -356,7 +356,7 @@ class home extends StatelessWidget {
                         children: [
                           SizedBox(
                               height:
-                                  MediaQuery.sizeOf(context).height * 0.125),
+                                  MediaQuery.sizeOf(context).height * 0.100),
                           texts_2(context, snapshot.data["username"], 20,
                               TextAlign.center, FontWeight.normal),
                           texts_2(context, snapshot.data.id, 15,
