@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types
+// ignore_for_file: camel_case_types, use_build_context_synchronously
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -236,8 +236,39 @@ class home_admin extends StatelessWidget {
                                                                           .spaceEvenly,
                                                                   children: [
                                                                     IconButton(
-                                                                        onPressed:
-                                                                            () async {
+                                                                      onPressed:
+                                                                          () async {
+                                                                        bool
+                                                                            deleteConfirmed =
+                                                                            await showDialog(
+                                                                          context:
+                                                                              context,
+                                                                          builder:
+                                                                              (BuildContext context) {
+                                                                            return AlertDialog(
+                                                                              title: texts_2(context, "Konfirmasi Hapus", 20, TextAlign.start, FontWeight.normal),
+                                                                              content: texts_2(context, "Apakah Anda Yakin Ingin Menghapus Item Ini ?", 16, TextAlign.start, FontWeight.normal),
+                                                                              backgroundColor: Theme.of(context).cardColor,
+                                                                              actions: [
+                                                                                TextButton(
+                                                                                  onPressed: () {
+                                                                                    Navigator.of(context).pop(false);
+                                                                                  },
+                                                                                  child: texts_2(context, "Batal", 16, TextAlign.start, FontWeight.bold),
+                                                                                ),
+                                                                                TextButton(
+                                                                                  onPressed: () async {
+                                                                                    Navigator.of(context).pop(true);
+                                                                                  },
+                                                                                  child: texts_2(context, "Hapus", 16, TextAlign.start, FontWeight.bold),
+                                                                                ),
+                                                                              ],
+                                                                            );
+                                                                          },
+                                                                        );
+
+                                                                        // Hapus data jika pengguna mengonfirmasi
+                                                                        if (deleteConfirmed) {
                                                                           adminsrv.deleteData(
                                                                               context,
                                                                               dat);
@@ -248,29 +279,32 @@ class home_admin extends StatelessWidget {
                                                                             dat.id,
                                                                             dat.kategori
                                                                           ]);
-                                                                        },
-                                                                        icon:
-                                                                            const Icon(
-                                                                          CupertinoIcons
-                                                                              .trash,
-                                                                          size:
-                                                                              35,
-                                                                        )),
+                                                                        }
+                                                                      },
+                                                                      icon:
+                                                                          const Icon(
+                                                                        CupertinoIcons
+                                                                            .trash,
+                                                                        size:
+                                                                            35,
+                                                                      ),
+                                                                    ),
                                                                     IconButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.of(context)
-                                                                              .push(MaterialPageRoute(
-                                                                                  builder: (context) => EditScreen(
-                                                                                        prod: Product(id: dat.id, harga: dat.harga, desc: dat.desc, ekstensi: dat.ekstensi, kategori: dat.kategori),
-                                                                                      )))
-                                                                              .then((value) => categoryclothes.changecategory(categoryclothes.getCategory));
-                                                                        },
-                                                                        icon: const Icon(
-                                                                            CupertinoIcons
-                                                                                .pen,
-                                                                            size:
-                                                                                35)),
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.of(context)
+                                                                            .push(MaterialPageRoute(
+                                                                                builder: (context) => EditScreen(
+                                                                                      prod: Product(id: dat.id, harga: dat.harga, desc: dat.desc, ekstensi: dat.ekstensi, kategori: dat.kategori),
+                                                                                    )))
+                                                                            .then((value) => categoryclothes.changecategory(categoryclothes.getCategory));
+                                                                      },
+                                                                      icon: const Icon(
+                                                                          CupertinoIcons
+                                                                              .pen,
+                                                                          size:
+                                                                              35),
+                                                                    ),
                                                                   ],
                                                                 )
                                                               ],
