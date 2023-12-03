@@ -50,6 +50,7 @@ class AdminServices {
             'product/${product.kategori}/${newProduct.id}.${pic.path.split(".").last}')
         .putFile(File(pic.path))
         .then((value1) {
+      ScaffoldMessenger.of(context).clearSnackBars();
       final snackBar =
           snackbar(context, "Produk Berhasil Ditambahkan", Colors.green, 2)
               as SnackBar;
@@ -57,7 +58,7 @@ class AdminServices {
     });
   }
 
-  updateData(BuildContext contexts, XFile? pic, Product product) async {
+  updateData(BuildContext context, XFile? pic, Product product) async {
     await productCol
         .doc("products")
         .collection(product.kategori)
@@ -71,12 +72,15 @@ class AdminServices {
               'product/${product.kategori}/${product.id}.${pic.path.split(".").last}')
           .putFile(File(pic.path));
     }
+    ScaffoldMessenger.of(context).clearSnackBars();
     final snackBar =
-        snackbar(contexts, "Produk Berhasil Diubah", Colors.green, 1)
+        snackbar(context, "Produk Berhasil Diubah", Colors.green, 1)
             as SnackBar;
-    ScaffoldMessenger.of(contexts).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
     await Future.delayed(const Duration(seconds: 2));
-    Navigator.of(contexts).pop();
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    Navigator.of(context).pop();
   }
 
   deleteData(BuildContext context, Product product) async {

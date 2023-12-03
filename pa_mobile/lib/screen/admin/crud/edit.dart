@@ -23,16 +23,15 @@ class _EditScreenState extends State<EditScreen> {
 
   XFile? _img;
   final _picker = ImagePicker();
+  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
-    // --------------- UBAH NANTI (ketika sudah cerdas) ----------------
     _hargaController.text = (_hargaController.text == "")
         ? widget.prod.harga.toString()
         : _hargaController.text;
     _descController.text =
         (_descController.text == "") ? widget.prod.desc : _descController.text;
-    // --------------- UBAH NANTI (ketika sudah cerdas) ----------------
 
     return WillPopScope(
       onWillPop: () {
@@ -57,7 +56,17 @@ class _EditScreenState extends State<EditScreen> {
                   child: IconButton(
                     icon: const Icon(CupertinoIcons.back, size: 35),
                     onPressed: () {
-                      Navigator.pop(context);
+                      if (!_loading) {
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        Navigator.of(context).pop(0);
+                      } else {
+                        final snackBar = snackbar(
+                            context,
+                            "Mohon tunggu sebentar",
+                            Colors.orangeAccent,
+                            2) as SnackBar;
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
                     },
                   ),
                 ),
@@ -116,14 +125,51 @@ class _EditScreenState extends State<EditScreen> {
                 ),
                 Container(
                   child: button(context, "Ubah", 0.03, 0.2, 0.45, () async {
-                    widget.prod.harga = int.parse(_hargaController.text);
-                    widget.prod.desc = _descController.text;
-                    if (_img != null) {
-                      widget.prod.ekstensi = _img!.path.split(".").last;
-                    }
+                    if (_hargaController.text != "" &&
+                        _descController.text != "") {
+                      int hargaProd = 0;
 
-                    await widget.prodservices
-                        .updateData(context, _img, widget.prod);
+                      try {
+                        hargaProd = int.parse(_hargaController.text);
+                      } catch (e) {
+                        final snackBar = snackbar(
+                            context,
+                            "Harga yang dimasukkan invalid",
+                            Colors.red,
+                            2) as SnackBar;
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        return;
+                      }
+
+                      if (hargaProd <= 0) {
+                        final snackBar = snackbar(
+                            context,
+                            "Harga tidak boleh kurang dari atau sama dengan 0",
+                            Colors.red,
+                            2) as SnackBar;
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        return;
+                      }
+
+                      _loading = true;
+
+                      widget.prod.harga = hargaProd;
+                      widget.prod.desc = _descController.text;
+                      if (_img != null) {
+                        widget.prod.ekstensi = _img!.path.split(".").last;
+                      }
+
+                      await widget.prodservices
+                          .updateData(context, _img, widget.prod).then((value) => _loading = false);
+                    } else {
+                      // Jaga-jaga
+                      final snackBar = snackbar(
+                          context,
+                          "Mohon isi semua data yang dibutuhkan",
+                          Colors.red,
+                          2) as SnackBar;
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
                   }),
                 ),
               ],

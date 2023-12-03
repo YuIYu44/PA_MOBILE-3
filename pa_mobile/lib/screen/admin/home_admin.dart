@@ -230,7 +230,7 @@ class home_admin extends StatelessWidget {
                                                                   IconButton(
                                                                     onPressed:
                                                                         () async {
-                                                                      bool
+                                                                      bool?
                                                                           deleteConfirmed =
                                                                           await showDialog(
                                                                         context:
@@ -272,27 +272,28 @@ class home_admin extends StatelessWidget {
                                                                       );
 
                                                                       // Hapus data jika pengguna mengonfirmasi
-                                                                      if (deleteConfirmed) {
-                                                                        adminsrv.deleteData(
-                                                                            context,
-                                                                            dat);
-                                                                        Storage()
-                                                                            .deleteImage("product/${dat.kategori}/${dat.id}.${dat.ekstensi}");
-                                                                        dataclothes
-                                                                            .delete([
-                                                                          dat.id,
-                                                                          dat.kategori
-                                                                        ]);
-                                                                        final snackBar = snackbar(
-                                                                            context,
-                                                                            "Produk Berhasil Dihapus",
-                                                                            Colors
-                                                                                .green,
-                                                                            2,
-                                                                            floating:
-                                                                                true) as SnackBar;
-                                                                        ScaffoldMessenger.of(context)
-                                                                            .showSnackBar(snackBar);
+                                                                      if (deleteConfirmed !=
+                                                                          null) {
+                                                                        if (deleteConfirmed) {
+                                                                          adminsrv.deleteData(
+                                                                              context,
+                                                                              dat);
+                                                                          Storage()
+                                                                              .deleteImage("product/${dat.kategori}/${dat.id}.${dat.ekstensi}");
+                                                                          dataclothes
+                                                                              .delete([
+                                                                            dat.id,
+                                                                            dat.kategori
+                                                                          ]);
+                                                                          final snackBar = snackbar(
+                                                                              context,
+                                                                              "Produk Berhasil Dihapus",
+                                                                              Colors.green,
+                                                                              2,
+                                                                              floating: true) as SnackBar;
+                                                                          ScaffoldMessenger.of(context)
+                                                                              .showSnackBar(snackBar);
+                                                                        }
                                                                       }
                                                                     },
                                                                     icon:
@@ -305,6 +306,9 @@ class home_admin extends StatelessWidget {
                                                                   IconButton(
                                                                     onPressed:
                                                                         () {
+                                                                      ScaffoldMessenger.of(
+                                                                              context)
+                                                                          .clearSnackBars();
                                                                       Navigator.of(
                                                                               context)
                                                                           .push(MaterialPageRoute(
@@ -448,6 +452,7 @@ class home_admin extends StatelessWidget {
             floatingActionButton: FloatingActionButton(
               backgroundColor: Theme.of(context).cardColor,
               onPressed: () async {
+                ScaffoldMessenger.of(context).clearSnackBars();
                 await Navigator.of(context)
                     .push(MaterialPageRoute(
                         builder: (context) => const AddScreen()))
