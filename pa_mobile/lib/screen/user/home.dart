@@ -247,6 +247,15 @@ class home extends StatelessWidget {
                                                                   key);
                                                           data.delete(
                                                               productId);
+                                                          var snackbar_ = snackbar(
+                                                              context,
+                                                              "Produk Berhasil Dihapus Dari Daftar Favorite",
+                                                              Colors.green,
+                                                              2) as SnackBar;
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                                  snackbar_);
                                                         },
                                                         icon: const Icon(
                                                           CupertinoIcons.trash,
