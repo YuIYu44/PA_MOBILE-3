@@ -60,6 +60,7 @@ class _AddScreenState extends State<AddScreen> {
                     icon: const Icon(CupertinoIcons.back, size: 35),
                     onPressed: () {
                       Navigator.of(context).pop(0);
+                      ScaffoldMessenger.of(context).clearSnackBars();
                     },
                   ),
                 ),
@@ -160,9 +161,34 @@ class _AddScreenState extends State<AddScreen> {
                       descController.text != "" &&
                       selectedCategory != "" &&
                       _img != null) {
-                        
+                    int hargaProd = 0;
+
+                    try {
+                      hargaProd = int.parse(hargaController.text);
+                    } catch (e) {
+                      final snackBar = snackbar(
+                          context,
+                          "Harga yang dimasukkan invalid",
+                          Colors.red,
+                          2) as SnackBar;
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      return;
+                    }
+
+                    if(hargaProd <= 0){
+                      final snackBar = snackbar(
+                          context,
+                          "Harga tidak boleh kurang dari atau sama dengan 0",
+                          Colors.red,
+                          2) as SnackBar;
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      return;
+                    }
+
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                    
                     Product newProd = Product(
-                        harga: int.parse(hargaController.text),
+                        harga: hargaProd,
                         desc: descController.text,
                         ekstensi: _img!.path.split(".").last,
                         kategori: selectedCategory!);
@@ -173,7 +199,11 @@ class _AddScreenState extends State<AddScreen> {
                       _img = null;
                     });
                   } else {
-                    final snackBar = snackbar(context, "Mohon isi semua data yang dibutuhkan", Colors.red, 2) as SnackBar;
+                    final snackBar = snackbar(
+                        context,
+                        "Mohon isi semua data yang dibutuhkan",
+                        Colors.red,
+                        2) as SnackBar;
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
                 }))
