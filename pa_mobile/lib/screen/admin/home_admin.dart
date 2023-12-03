@@ -127,6 +127,9 @@ class home_admin extends StatelessWidget {
                                                           const EdgeInsets.only(
                                                               top: 5),
                                                       child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
                                                         children: [
                                                           SizedBox(
                                                             width: MediaQuery.of(
@@ -155,7 +158,7 @@ class home_admin extends StatelessWidget {
                                                                           snapshot2
                                                                               .data!,
                                                                           fit: BoxFit
-                                                                              .contain,
+                                                                              .fill,
                                                                         )
                                                                       : Container();
                                                                 }),

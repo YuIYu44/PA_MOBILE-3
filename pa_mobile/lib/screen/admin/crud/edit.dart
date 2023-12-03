@@ -63,8 +63,8 @@ class _EditScreenState extends State<EditScreen> {
                 ),
                 GestureDetector(
                   child: Container(
-                      width: MediaQuery.of(context).size.width * 0.37,
-                      height: 150,
+                      width: MediaQuery.of(context).size.width * 0.47,
+                      height: MediaQuery.of(context).size.width * 0.6,
                       decoration: (_img != null)
                           ? BoxDecoration(
                               color: Theme.of(context).cardColor,
