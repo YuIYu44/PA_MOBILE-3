@@ -123,7 +123,7 @@ class chosenClothes extends StatelessWidget {
                         snapshot2.connectionState == ConnectionState.done)
                     ? Image.network(
                         snapshot2.data!,
-                        fit: BoxFit.contain,
+                        fit: BoxFit.fill,
                       )
                     : Container();
               },

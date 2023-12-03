@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, prefer_interpolation_to_compose_strings
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pa_mobile/screen/user/chosen_clothes.dart';
@@ -41,13 +43,13 @@ Widget button(
       child: ElevatedButton(
           onPressed: do_,
           style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xff394867),
+              backgroundColor: const Color(0xff394867),
               side: BorderSide(
                 color: Theme.of(context).textTheme.bodyLarge!.color!,
               )),
           child: Text(texts,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
                 fontFamily: 'Iceland',
@@ -72,7 +74,7 @@ Widget textform(BuildContext context, TextEditingController controllers,
           borderSide: BorderSide(
               color: Theme.of(context).textTheme.bodyLarge!.color!, width: 1),
         ),
-        contentPadding: EdgeInsets.only(top: 30, left: 10),
+        contentPadding: const EdgeInsets.only(top: 30, left: 10),
         labelText: text,
         labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: fontsize + 3,
@@ -110,7 +112,7 @@ Widget textfields(BuildContext context, TextEditingController controllers,
                   color: Theme.of(context).textTheme.bodyLarge!.color!,
                   width: 1),
             ),
-            contentPadding: EdgeInsets.only(top: 10, left: 10),
+            contentPadding: const EdgeInsets.only(top: 10, left: 10),
             labelText: text,
             labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: fontsize + 3,
@@ -146,7 +148,7 @@ PreferredSizeWidget appbar(context) {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.only(right: 20),
+          margin: const EdgeInsets.only(right: 20),
           width: 60,
           height: 60,
           child: ClipOval(
@@ -195,14 +197,12 @@ Widget category(context, Category) {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              margin: EdgeInsets.only(right: 10, bottom: 10),
+                              margin:
+                                  const EdgeInsets.only(right: 10, bottom: 10),
                               width: MediaQuery.of(context).size.width * 0.08,
                               height: MediaQuery.of(context).size.width * 0.08,
                               child: Image.asset(
-                                "assets/clothes/" +
-                                    Category[Category.keys.elementAt(index)]![
-                                        index2] +
-                                    ".png",
+                                "${"assets/clothes/" + Category[Category.keys.elementAt(index)]![index2]}.png",
                                 color: Theme.of(context)
                                     .textTheme
                                     .bodyLarge!

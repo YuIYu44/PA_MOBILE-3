@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, camel_case_types
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,6 +23,8 @@ class home extends StatelessWidget {
   final category_bawahan = {
     'CELANA': ["Jeans", "Short"],
   };
+
+  home({super.key});
 
   Widget _homepage(BuildContext context) {
     return SingleChildScrollView(
@@ -136,9 +140,11 @@ class home extends StatelessWidget {
                                         userservice()
                                             .deletefavorite(productId, key);
                                         data.deleteproduct(productId);
-                                        return Text("");
+                                        return const Text("");
                                       } else {
                                         return Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
                                           children: [
                                             SizedBox(
                                               width: MediaQuery.of(context)
@@ -160,7 +166,7 @@ class home extends StatelessWidget {
                                                                   .done)
                                                       ? Image.network(
                                                           snapshot2.data!,
-                                                          fit: BoxFit.contain,
+                                                          fit: BoxFit.fill,
                                                         )
                                                       : Container();
                                                 },
@@ -416,20 +422,20 @@ class home extends StatelessWidget {
                 unselectedItemColor: Theme.of(context).iconTheme.color,
                 selectedItemColor: Theme.of(context).cardColor,
                 currentIndex: changePage.selects,
-                onTap: (_index) {
-                  changePage.change(_index);
+                onTap: (index) {
+                  changePage.change(index);
                 },
                 showSelectedLabels: false,
                 showUnselectedLabels: false,
-                items: [
-                  const BottomNavigationBarItem(
+                items: const [
+                  BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.home, size: 35), label: "Home"),
-                  const BottomNavigationBarItem(
+                  BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.heart, size: 35),
                       label: "favorite"),
-                  const BottomNavigationBarItem(
+                  BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.info, size: 35), label: "Info"),
-                  const BottomNavigationBarItem(
+                  BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.profile_circled, size: 35),
                       label: "Profile"),
                 ],
