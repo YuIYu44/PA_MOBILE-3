@@ -17,7 +17,15 @@ Widget texts(context, texts, fontsizes, textsalign) {
 
 Widget snackbar(context, text, color, duration, {bool? floating}) {
   return SnackBar(
-      content: texts_2(context, text, 14, TextAlign.left, FontWeight.bold),
+      content: Text(
+        text,
+        style: const TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            fontFamily: "Iceland"),
+        textAlign: TextAlign.left,
+      ),
       backgroundColor: color,
       duration: Duration(seconds: duration),
       behavior: floating != null ? SnackBarBehavior.floating : null);

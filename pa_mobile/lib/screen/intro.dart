@@ -25,14 +25,17 @@ class IntroductionPage extends StatelessWidget {
                       pageColor: Theme.of(context).scaffoldBackgroundColor,
                       imagePadding: const EdgeInsets.only(top: 130),
                       titleTextStyle: TextStyle(
-                          color: Theme.of(context).hintColor, fontSize: 25),
+                          color: Theme.of(context).canvasColor, fontSize: 25),
                     ),
                     bodyWidget: Column(
                       children: [
                         Text(
                             "Temukan barang-barang berkualitas dengan harga terjangkau di toko thrift kami.",
                             style: GoogleFonts.lora(
-                                fontWeight: FontWeight.bold, fontSize: 17),
+                                textStyle:
+                                    Theme.of(context).textTheme.bodyLarge,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17),
                             textAlign: TextAlign.center),
                       ],
                     ),
@@ -52,14 +55,17 @@ class IntroductionPage extends StatelessWidget {
                       pageColor: Theme.of(context).scaffoldBackgroundColor,
                       imagePadding: const EdgeInsets.only(top: 130),
                       titleTextStyle: TextStyle(
-                          color: Theme.of(context).hintColor, fontSize: 25),
+                          color: Theme.of(context).canvasColor, fontSize: 25),
                     ),
                     bodyWidget: Column(
                       children: [
                         Text(
                             "Jelajahi koleksi kami dan temukan barang thrift yang sesuai dengan selera Anda.",
                             style: GoogleFonts.lora(
-                                fontWeight: FontWeight.bold, fontSize: 17),
+                                textStyle:
+                                    Theme.of(context).textTheme.bodyLarge,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17),
                             textAlign: TextAlign.center),
                       ],
                     ),
@@ -78,7 +84,7 @@ class IntroductionPage extends StatelessWidget {
                       pageColor: Theme.of(context).scaffoldBackgroundColor,
                       imagePadding: const EdgeInsets.only(top: 130),
                       titleTextStyle: TextStyle(
-                          color: Theme.of(context).hintColor, fontSize: 25),
+                          color: Theme.of(context).canvasColor, fontSize: 25),
                     ),
                     bodyWidget: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -86,7 +92,10 @@ class IntroductionPage extends StatelessWidget {
                         Text(
                             "Dengan belanja di toko 3Thrift, Anda dapat mendapatkan barang berkualitas tanpa harus menguras dompet.",
                             style: GoogleFonts.lora(
-                                fontWeight: FontWeight.bold, fontSize: 17),
+                                textStyle:
+                                    Theme.of(context).textTheme.bodyLarge,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17),
                             textAlign: TextAlign.center),
                       ],
                     ),
@@ -106,7 +115,7 @@ class IntroductionPage extends StatelessWidget {
                 next: Icon(
                   Icons.arrow_forward_rounded,
                   size: 30,
-                  color: Theme.of(context).hintColor,
+                  color: Theme.of(context).canvasColor,
                 ),
                 done: texts(context, "Selesai", 16, TextAlign.start),
                 onSkip: () {
