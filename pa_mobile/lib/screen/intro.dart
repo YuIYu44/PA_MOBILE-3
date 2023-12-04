@@ -18,20 +18,31 @@ class IntroductionPage extends StatelessWidget {
               return IntroductionScreen(
                 globalBackgroundColor:
                     Theme.of(context).scaffoldBackgroundColor,
+                dotsDecorator: DotsDecorator(
+                  size: const Size.square(10.0),
+                  color: Color.fromARGB(255, 101, 109, 133),
+                  activeColor: const Color(0xff394867),
+                  activeSize: const Size(20.0, 10.0),
+                  activeShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                ),
                 pages: [
                   PageViewModel(
                     title: "Selamat Datang di Toko 3Thrift",
                     decoration: PageDecoration(
                       pageColor: Theme.of(context).scaffoldBackgroundColor,
                       imagePadding: const EdgeInsets.only(top: 130),
-                      titleTextStyle: TextStyle(
-                          color: Theme.of(context).canvasColor, fontSize: 25),
+                      titleTextStyle: GoogleFonts.lora(
+                          textStyle: Theme.of(context).textTheme.bodyLarge,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25),
                     ),
                     bodyWidget: Column(
                       children: [
                         Text(
                             "Temukan barang-barang berkualitas dengan harga terjangkau di toko thrift kami.",
-                            style: GoogleFonts.lora(
+                            style: GoogleFonts.roboto(
                                 textStyle:
                                     Theme.of(context).textTheme.bodyLarge,
                                 fontWeight: FontWeight.bold,
@@ -54,14 +65,16 @@ class IntroductionPage extends StatelessWidget {
                     decoration: PageDecoration(
                       pageColor: Theme.of(context).scaffoldBackgroundColor,
                       imagePadding: const EdgeInsets.only(top: 130),
-                      titleTextStyle: TextStyle(
-                          color: Theme.of(context).canvasColor, fontSize: 25),
+                      titleTextStyle: GoogleFonts.lora(
+                          textStyle: Theme.of(context).textTheme.bodyLarge,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25),
                     ),
                     bodyWidget: Column(
                       children: [
                         Text(
                             "Jelajahi koleksi kami dan temukan barang thrift yang sesuai dengan selera Anda.",
-                            style: GoogleFonts.lora(
+                            style: GoogleFonts.roboto(
                                 textStyle:
                                     Theme.of(context).textTheme.bodyLarge,
                                 fontWeight: FontWeight.bold,
@@ -81,17 +94,18 @@ class IntroductionPage extends StatelessWidget {
                   PageViewModel(
                     title: "Beli dan Hemat",
                     decoration: PageDecoration(
-                      pageColor: Theme.of(context).scaffoldBackgroundColor,
-                      imagePadding: const EdgeInsets.only(top: 130),
-                      titleTextStyle: TextStyle(
-                          color: Theme.of(context).canvasColor, fontSize: 25),
-                    ),
+                        pageColor: Theme.of(context).scaffoldBackgroundColor,
+                        imagePadding: const EdgeInsets.only(top: 130),
+                        titleTextStyle: GoogleFonts.lora(
+                            textStyle: Theme.of(context).textTheme.bodyLarge,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25)),
                     bodyWidget: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                             "Dengan belanja di toko 3Thrift, Anda dapat mendapatkan barang berkualitas tanpa harus menguras dompet.",
-                            style: GoogleFonts.lora(
+                            style: GoogleFonts.roboto(
                                 textStyle:
                                     Theme.of(context).textTheme.bodyLarge,
                                 fontWeight: FontWeight.bold,
@@ -111,13 +125,13 @@ class IntroductionPage extends StatelessWidget {
                 ],
                 showNextButton: true,
                 showSkipButton: true,
-                skip: texts(context, "Lewati", 16, TextAlign.start),
+                skip: texts(context, "Lewati", 18, TextAlign.start),
                 next: Icon(
                   Icons.arrow_forward_rounded,
                   size: 30,
-                  color: Theme.of(context).canvasColor,
+                  color: Theme.of(context).dividerColor,
                 ),
-                done: texts(context, "Selesai", 16, TextAlign.start),
+                done: texts(context, "Selesai", 18, TextAlign.start),
                 onSkip: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(

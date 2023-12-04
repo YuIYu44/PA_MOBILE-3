@@ -241,21 +241,103 @@ class home extends StatelessWidget {
                                                     children: [
                                                       IconButton(
                                                         onPressed: () async {
-                                                          await userservice()
-                                                              .deletefavorite(
-                                                                  productId,
-                                                                  key);
-                                                          data.delete(
-                                                              productId);
-                                                          var snackbar_ = snackbar(
+                                                          bool?
+                                                              deleteConfirmed =
+                                                              await showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                              return AlertDialog(
+                                                                title: texts_2(
+                                                                  context,
+                                                                  "Konfirmasi Hapus",
+                                                                  20,
+                                                                  TextAlign
+                                                                      .start,
+                                                                  FontWeight
+                                                                      .normal,
+                                                                ),
+                                                                content:
+                                                                    texts_2(
+                                                                  context,
+                                                                  "Apakah Anda Yakin Ingin Menghapus Item Ini Dari Favorite ?",
+                                                                  16,
+                                                                  TextAlign
+                                                                      .start,
+                                                                  FontWeight
+                                                                      .normal,
+                                                                ),
+                                                                backgroundColor:
+                                                                    Theme.of(
+                                                                            context)
+                                                                        .cardColor,
+                                                                actions: [
+                                                                  TextButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop(
+                                                                              false);
+                                                                    },
+                                                                    child:
+                                                                        texts_2(
+                                                                      context,
+                                                                      "Batal",
+                                                                      16,
+                                                                      TextAlign
+                                                                          .start,
+                                                                      FontWeight
+                                                                          .bold,
+                                                                    ),
+                                                                  ),
+                                                                  TextButton(
+                                                                    onPressed:
+                                                                        () async {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop(
+                                                                              true);
+                                                                    },
+                                                                    child:
+                                                                        texts_2(
+                                                                      context,
+                                                                      "Hapus",
+                                                                      16,
+                                                                      TextAlign
+                                                                          .start,
+                                                                      FontWeight
+                                                                          .bold,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
+                                                          );
+
+                                                          // Hapus data jika pengguna mengonfirmasi
+                                                          if (deleteConfirmed !=
+                                                                  null &&
+                                                              deleteConfirmed) {
+                                                            await userservice()
+                                                                .deletefavorite(
+                                                                    productId,
+                                                                    key);
+                                                            data.delete(
+                                                                productId);
+                                                            var snackbar_ =
+                                                                snackbar(
                                                               context,
                                                               "Produk Berhasil Dihapus Dari Daftar Favorite",
                                                               Colors.green,
-                                                              2) as SnackBar;
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                                  snackbar_);
+                                                              2,
+                                                            ) as SnackBar;
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    snackbar_);
+                                                          }
                                                         },
                                                         icon: const Icon(
                                                           CupertinoIcons.trash,
