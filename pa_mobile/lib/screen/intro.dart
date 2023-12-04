@@ -92,7 +92,7 @@ class IntroductionPage extends StatelessWidget {
                     ),
                   ),
                   PageViewModel(
-                    title: "Beli dan Hemat",
+                    title: "Sukai dan Hemat",
                     decoration: PageDecoration(
                         pageColor: Theme.of(context).scaffoldBackgroundColor,
                         imagePadding: const EdgeInsets.only(top: 130),
@@ -104,7 +104,7 @@ class IntroductionPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                            "Dengan belanja di toko 3Thrift, Anda dapat mendapatkan barang berkualitas tanpa harus menguras dompet.",
+                            "Didalam toko 3Thrift kami, Anda dapat mendapatkan barang berkualitas tanpa harus menguras dompet.",
                             style: GoogleFonts.roboto(
                                 textStyle:
                                     Theme.of(context).textTheme.bodyLarge,
