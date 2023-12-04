@@ -26,7 +26,7 @@ class _EditScreenState extends State<EditScreen> {
   bool _loading = false;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext ctx) {
     _hargaController.text = (_hargaController.text == "")
         ? widget.prod.harga.toString()
         : _hargaController.text;
@@ -38,10 +38,10 @@ class _EditScreenState extends State<EditScreen> {
         return Future.value(false);
       },
       child: Scaffold(
-        appBar: appbar(context),
+        appBar: appbar(ctx),
         body: SingleChildScrollView(
           child: Padding(
-            padding: customEdgeInsets(context, 0.03, 0),
+            padding: customEdgeInsets(ctx, 0.03, 0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,7 +49,7 @@ class _EditScreenState extends State<EditScreen> {
                 Container(
                   margin: EdgeInsets.only(
                     top: 10,
-                    right: MediaQuery.sizeOf(context).width * 0.7,
+                    right: MediaQuery.sizeOf(ctx).width * 0.7,
                     bottom: 20,
                   ),
                   alignment: Alignment.topLeft,
@@ -57,38 +57,35 @@ class _EditScreenState extends State<EditScreen> {
                     icon: const Icon(CupertinoIcons.back, size: 35),
                     onPressed: () {
                       if (!_loading) {
-                        ScaffoldMessenger.of(context).clearSnackBars();
-                        Navigator.of(context).pop(0);
+                        ScaffoldMessenger.of(ctx).clearSnackBars();
+                        Navigator.of(ctx).pop(0);
                       } else {
-                        final snackBar = snackbar(
-                            context,
-                            "Mohon tunggu sebentar",
-                            Colors.orangeAccent,
-                            2) as SnackBar;
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        final snackBar = snackbar(ctx, "Mohon tunggu sebentar",
+                            Colors.orangeAccent, 2) as SnackBar;
+                        ScaffoldMessenger.of(ctx).showSnackBar(snackBar);
                       }
                     },
                   ),
                 ),
                 GestureDetector(
                   child: Container(
-                      width: MediaQuery.of(context).size.width * 0.47,
-                      height: MediaQuery.of(context).size.width * 0.6,
+                      width: MediaQuery.of(ctx).size.width * 0.47,
+                      height: MediaQuery.of(ctx).size.width * 0.6,
                       decoration: (_img != null)
                           ? BoxDecoration(
-                              color: Theme.of(context).cardColor,
+                              color: Theme.of(ctx).cardColor,
                               image: DecorationImage(
                                   image: FileImage(File(_img!.path))))
                           : null,
                       child: (_img == null)
                           ? SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.37,
+                              width: MediaQuery.of(ctx).size.width * 0.37,
                               height: 150,
                               child: FutureBuilder<String>(
                                   future: Storage().getImage(
                                       "product/${widget.prod.kategori}/${widget.prod.id}.${widget.prod.ekstensi}"),
-                                  builder: (context,
-                                      AsyncSnapshot<String> snapshot2) {
+                                  builder:
+                                      (ctx, AsyncSnapshot<String> snapshot2) {
                                     return (snapshot2.hasData)
                                         ? Image.network(
                                             snapshot2.data!,
@@ -110,7 +107,7 @@ class _EditScreenState extends State<EditScreen> {
                 Container(
                   margin: const EdgeInsets.only(top: 30),
                   child: textfields(
-                    context,
+                    ctx,
                     _hargaController,
                     false,
                     "Harga",
@@ -121,10 +118,10 @@ class _EditScreenState extends State<EditScreen> {
                 ),
                 Container(
                   child: textform(
-                      context, _descController, "Deskripsi", 14, 0.05, 0.4),
+                      ctx, _descController, "Deskripsi", 14, 0.05, 0.4),
                 ),
                 Container(
-                  child: button(context, "Ubah", 0.03, 0.2, 0.45, () async {
+                  child: button(ctx, "Ubah", 0.03, 0.2, 0.45, () async {
                     if (_hargaController.text != "" &&
                         _descController.text != "") {
                       int hargaProd = 0;
@@ -133,21 +130,21 @@ class _EditScreenState extends State<EditScreen> {
                         hargaProd = int.parse(_hargaController.text);
                       } catch (e) {
                         final snackBar = snackbar(
-                            context,
+                            ctx,
                             "Harga yang dimasukkan invalid",
                             Colors.red,
                             2) as SnackBar;
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        ScaffoldMessenger.of(ctx).showSnackBar(snackBar);
                         return;
                       }
 
                       if (hargaProd <= 0) {
                         final snackBar = snackbar(
-                            context,
+                            ctx,
                             "Harga tidak boleh kurang dari atau sama dengan 0",
                             Colors.red,
                             2) as SnackBar;
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        ScaffoldMessenger.of(ctx).showSnackBar(snackBar);
                         return;
                       }
 
@@ -160,15 +157,16 @@ class _EditScreenState extends State<EditScreen> {
                       }
 
                       await widget.prodservices
-                          .updateData(context, _img, widget.prod).then((value) => _loading = false);
+                          .updateData(ctx, _img, widget.prod)
+                          .then((value) => _loading = false);
                     } else {
                       // Jaga-jaga
                       final snackBar = snackbar(
-                          context,
+                          ctx,
                           "Mohon isi semua data yang dibutuhkan",
                           Colors.red,
                           2) as SnackBar;
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      ScaffoldMessenger.of(ctx).showSnackBar(snackBar);
                     }
                   }),
                 ),
