@@ -61,8 +61,8 @@ class _AddScreenState extends State<AddScreen> {
                     icon: const Icon(CupertinoIcons.back, size: 35),
                     onPressed: () {
                       if (!loading) {
-                        Navigator.of(context).pop(0);
                         ScaffoldMessenger.of(context).clearSnackBars();
+                        Navigator.of(context).pop(0);
                       } else {
                         final snackBar = snackbar(
                             context,

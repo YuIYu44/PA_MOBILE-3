@@ -78,7 +78,6 @@ class AdminServices {
             as SnackBar;
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
     await Future.delayed(const Duration(seconds: 2));
-
     ScaffoldMessenger.of(context).clearSnackBars();
     Navigator.of(context).pop();
   }
