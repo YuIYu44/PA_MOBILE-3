@@ -107,7 +107,7 @@ class _EditScreenState extends State<EditScreen> {
                 Container(
                   margin: const EdgeInsets.only(top: 30),
                   child: numericTextField(
-                      context, _hargaController, "Harga", 14, 0, 0.4),
+                      ctx, _hargaController, "Harga", 14, 0, 0.4),
                 ),
                 Container(
                   child: textform(
