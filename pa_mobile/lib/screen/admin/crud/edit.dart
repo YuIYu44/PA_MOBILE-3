@@ -109,15 +109,8 @@ class _EditScreenState extends State<EditScreen> {
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 30),
-                  child: textfields(
-                    context,
-                    _hargaController,
-                    false,
-                    "Harga",
-                    14,
-                    0,
-                    0.4,
-                  ),
+                  child: numericTextField(
+                      context, _hargaController, "Harga", 14, 0, 0.4),
                 ),
                 Container(
                   child: textform(
@@ -160,7 +153,8 @@ class _EditScreenState extends State<EditScreen> {
                       }
 
                       await widget.prodservices
-                          .updateData(context, _img, widget.prod).then((value) => _loading = false);
+                          .updateData(context, _img, widget.prod)
+                          .then((value) => _loading = false);
                     } else {
                       // Jaga-jaga
                       final snackBar = snackbar(

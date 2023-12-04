@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, prefer_interpolation_to_compose_strings
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pa_mobile/screen/user/chosen_clothes.dart';
 
@@ -135,6 +136,45 @@ Widget textfields(BuildContext context, TextEditingController controllers,
                 fontFamily: 'Iceland',
                 fontWeight: FontWeight.normal,
               )));
+}
+
+Widget numericTextField(BuildContext context, TextEditingController controller,
+    String text, double fontsize, double top, double width) {
+  return Container(
+    width: MediaQuery.sizeOf(context).width * width,
+    height: 40,
+    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * top),
+    child: TextField(
+      controller: controller,
+      keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly
+      ],
+      decoration: InputDecoration(
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+              color: Theme.of(context).textTheme.bodyLarge!.color!, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+              color: Theme.of(context).textTheme.bodyLarge!.color!, width: 1),
+        ),
+        contentPadding: const EdgeInsets.only(top: 10, left: 10),
+        labelText: text,
+        labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              fontSize: fontsize + 3,
+              fontFamily: 'Iceland',
+              fontWeight: FontWeight.bold,
+            ),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+      ),
+      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            fontSize: fontsize,
+            fontFamily: 'Iceland',
+            fontWeight: FontWeight.normal,
+          ),
+    ),
+  );
 }
 
 EdgeInsets customEdgeInsets(BuildContext context, x, y) {

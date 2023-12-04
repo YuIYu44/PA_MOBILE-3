@@ -112,16 +112,18 @@ class _AddScreenState extends State<AddScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            child: textfields(
-                              context,
-                              hargaController,
-                              false,
-                              "Harga",
-                              14,
-                              0,
-                              0.4,
-                            ),
-                          ),
+                              child:
+                                  // textfields(
+                                  //   context,
+                                  //   hargaController,
+                                  //   false,
+                                  //   "Harga",
+                                  //   14,
+                                  //   0,
+                                  //   0.4,
+                                  // ),
+                                  numericTextField(context, hargaController,
+                                      "Harga", 14, 0, 0.4)),
                           Container(
                             child: textform(
                               context,
